@@ -1,0 +1,451 @@
+variables:
+	{skz.water::%player%} = 1800
+	{skz.energy::%player%} = 1000
+	{skz.blood::%player%} = 5000
+	{skz.shock::%player%} = 0
+	{skz.stomach::%player%} = 1000
+	{skz.health::%player%} = 5000
+	{skz.status::%player%} = "zdrowy"
+	{skz.respawn::%player%} = 0
+
+options:
+	tag: &8[&6sk&4Z&8]
+
+on xp spawn:
+	cancel event
+
+every second:
+	loop all players:
+		if loop-player is in "skz":
+			if {skz.water::%loop-player%} > 0.5:
+				add -0.5 to {skz.water::%loop-player%}
+			else:
+				add -1 to {skz.water::%loop-player%}
+				add -5 to {skz.health::%loop-player%}
+				set {_skz.lose.blood::%loop-player%} to (0-{skz.blood::%loop-player%}/100)
+				add {_skz.lose.blood::%loop-player%} to {skz.blood::%loop-player%}
+			if {skz.energy::%loop-player%} > 0.5:
+				add -0.5 to {skz.energy::%loop-player%}
+			else:
+				set {skz.energy::%loop-player%} to 0
+			if {skz.stomach::%loop-player%} >= 1:
+				add -1 to {skz.stomach::%loop-player%}
+				if {skz.stomach::%loop-player%} >= 1000:
+					add -2 to {skz.stomach::%loop-player%}
+					add 7.5 to {skz.energy::%loop-player%}
+			if {skz.respawn::%loop-player%} >= 1:
+				add -1 to {skz.respawn::%loop-player%}
+			if {skz.shock::%loop-player%} >= 30:
+				add -30 to {skz.shock::%loop-player%}
+			else:
+				set {skz.shock::%loop-player%} to 0
+			if {skz.energy::%loop-player%} < 600:
+				set {skz.status::%loop-player%} to "glodny"
+				if {skz.energy::%loop-player%} < 100:
+					add -1 to {skz.health::%loop-player%}
+					set {_skz.lose.blood::%loop-player%} to (0-{skz.blood::%loop-player%}/200)
+					add {_skz.lose.blood::%loop-player%} to {skz.blood::%loop-player%}
+			else:
+				if {skz.status::%loop-player%} is "glodny":
+					set {skz.status::%loop-player%} to "zdrowy"
+			if {skz.water::%loop-player%} < 2000:
+				set {skz.status::%loop-player%} to "spragniony"
+			else:
+				if {skz.status::%loop-player%} is "spragniony":
+					set {skz.status::%loop-player%} to "zdrowy"
+			if {skz.status::%loop-player%} is "zatrucie":
+				add -7 to {skz.water::%loop-player%}
+			if {skz.water::%loop-player%} > 5000:
+				add -10 to {skz.water::%loop-player%}
+				add 1 to {skz.stomach::%loop-player%}
+			if {skz.energy::%loop-player%} > 5000:
+				add -10 to {skz.energy::%loop-player%}
+				add 3 to {skz.health::%loop-player%}
+			if loop-player is sprinting:
+				add -2 to {skz.water::%loop-player%}
+				add -3 to {skz.energy::%loop-player%}
+			# regeneracja krwi i zdrowia
+			if {skz.energy::%loop-player%} > 2500:
+				if {skz.water::%loop-player%} > 2000:
+					add 1 to {skz.blood::%loop-player%}
+					if {skz.blood::%loop-player%} > 5000:
+						set {skz.blood::%loop-player%} to 5000
+			if {skz.energy::%loop-player%} > 4000:
+				if {skz.water::%loop-player%} > 3500:
+					add 2 to {skz.blood::%loop-player%}
+					if {skz.blood::%loop-player%} > 5000:
+						set {skz.blood::%loop-player%} to 5000
+						add 3 to {skz.health::%loop-player%}
+						if {skz.health::%loop-player%} > 5000:
+							set {skz.health::%loop-player%} to 5000
+			if {skz.shock::%loop-player%} >= {skz.blood::%loop-player%}:
+				set {skz.status::%loop-player%} to "nieprzytomny"
+			else if {skz.blood::%loop-player%} < 500:
+				set {skz.status::%loop-player%} to "nieprzytomny"
+			else:
+				if {skz.status::%loop-player%} is "nieprzytomny":
+					set {skz.status::%loop-player%} to "zdrowy"
+			if {skz.status::%loop-player%} is "nieprzytomny":
+				apply slowness 10 to loop-player for 1 second
+				apply blindness to loop-player for 1 second
+				apply nausea to loop-player for 25 ticks
+			if {skz.status::%loop-player%} is "krwawi":
+				add -10 to {skz.blood::%loop-player%}
+				add -3 to {skz.health::%loop-player%}
+			if {skz.stomach::%loop-player%} > 2500:
+				set {_skz.chance.vommit::%loop-player%} to (({skz.stomach::%loop-player%}-2500)/5000)
+				chance of {_skz.chance.vommit::%loop-player%}:
+					send "&eBLEEEEEE...." to loop-player
+					add -1000 to {skz.water::%loop-player%}
+					add -500 to {skz.energy::%loop-player%}
+					add -1000 to {skz.stomach::%loop-player%}
+every 4 ticks:
+	loop all players:
+		if {skz.energy::%loop-player%} > 100:
+			if {skz.energy::%loop-player%} > 250:
+				if {skz.energy::%loop-player%} > 500:
+					if {skz.energy::%loop-player%} > 750:
+						if {skz.energy::%loop-player%} > 1000:
+							if {skz.energy::%loop-player%} > 1250:
+								if {skz.energy::%loop-player%} > 1500:
+									if {skz.energy::%loop-player%} > 1750:
+										if {skz.energy::%loop-player%} > 2000:
+											if {skz.energy::%loop-player%} > 2250:
+												if {skz.energy::%loop-player%} > 2500:
+													if {skz.energy::%loop-player%} > 2750:
+														if {skz.energy::%loop-player%} > 3000:
+															if {skz.energy::%loop-player%} > 3250:
+																if {skz.energy::%loop-player%} > 3500:
+																	if {skz.energy::%loop-player%} > 3750:
+																		if {skz.energy::%loop-player%} > 4000:
+																			if {skz.energy::%loop-player%} > 4250:
+																				if {skz.energy::%loop-player%} > 4500:
+																					if {skz.energy::%loop-player%} > 4750:
+																						set the loop-player's food level to 10
+																					else:
+																						set the loop-player's food level to 9.5
+																				else:
+																					set the loop-player's food level to 9
+																			else:
+																				set the loop-player's food level to 8.5
+																		else:
+																			set the loop-player's food level to 8
+																	else:
+																		set the loop-player's food level to 7.5
+																else:
+																	set the loop-player's food level to 7
+															else:
+																set the loop-player's food level to 6.5
+														else:
+															set the loop-player's food level to 6
+													else:
+														set the loop-player's food level to 5.5
+												else:
+													set the loop-player's food level to 5
+											else:
+												set the loop-player's food level to 4.5
+										else:
+											set the loop-player's food level to 4
+									else:
+										set the loop-player's food level to 3.5
+								else:
+									set the loop-player's food level to 3
+							else:
+								set the loop-player's food level to 2.5
+						else:
+							set the loop-player's food level to 2
+					else:
+						set the loop-player's food level to 1.5
+				else:
+					set the loop-player's food level to 1
+			else:
+				set the loop-player's food level to 0.5
+		else:
+			set the loop-player's food level to 0
+		if {skz.health::%loop-player%} > 50:
+			if {skz.health::%loop-player%} > 250:
+				if {skz.health::%loop-player%} > 500:
+					if {skz.health::%loop-player%} > 750:
+						if {skz.health::%loop-player%} > 1000:
+							if {skz.health::%loop-player%} > 1250:
+								if {skz.health::%loop-player%} > 1500:
+									if {skz.health::%loop-player%} > 1750:
+										if {skz.health::%loop-player%} > 2000:
+											if {skz.health::%loop-player%} > 2250:
+												if {skz.health::%loop-player%} > 2500:
+													if {skz.health::%loop-player%} > 2750:
+														if {skz.health::%loop-player%} > 3000:
+															if {skz.health::%loop-player%} > 3250:
+																if {skz.health::%loop-player%} > 3500:
+																	if {skz.health::%loop-player%} > 3750:
+																		if {skz.health::%loop-player%} > 4000:
+																			if {skz.health::%loop-player%} > 4250:
+																				if {skz.health::%loop-player%} > 4500:
+																					if {skz.health::%loop-player%} > 4750:
+																						set the loop-player's health to 10
+																					else:
+																						set the loop-player's health to 9.5
+																				else:
+																					set the loop-player's health to 9
+																			else:
+																				set the loop-player's health to 8.5
+																		else:
+																			set the loop-player's health to 8
+																	else:
+																		set the loop-player's health to 7.5
+																else:
+																	set the loop-player's health to 7
+															else:
+																set the loop-player's health to 6.5
+														else:
+															set the loop-player's health to 6
+													else:
+														set the loop-player's health to 5.5
+												else:
+													set the loop-player's health to 5
+											else:
+												set the loop-player's health to 4.5
+										else:
+											set the loop-player's health to 4
+									else:
+										set the loop-player's health to 3.5
+								else:
+									set the loop-player's health to 3
+							else:
+								set the loop-player's health to 2.5
+						else:
+							set the loop-player's health to 2
+					else:
+						set the loop-player's health to 1.5
+				else:
+					set the loop-player's health to 1
+			else:
+				set the loop-player's health to 0.5
+		else:
+			kill loop-player
+
+on eat:
+	if player's tool is any raw meat or any raw fish:
+		add 150 to {skz.energy::%player%}
+		add 150 to {skz.water::%player%}
+		add 400 to {skz.stomach::%player%}
+		chance of 60%:
+			set {skz.status::%player%} to "zatrucie"
+	if player's tool is any cooked meat or any cooked fish:
+		add 250 to {skz.energy::%player%}
+		add 100 to {skz.water::%player%}
+		add 400 to {skz.stomach::%player%}
+	if player's tool is rotten flesh:
+		add 30 to {skz.energy::%player%}
+		add 10 to {skz.water::%player%}
+		add 100 to {skz.stomach::%player%}
+		chance of 60%:
+			set {skz.status::%player%} to "zatrucie"
+	if player's tool is any potato:
+		add 80 to {skz.energy::%player%}
+		add 20 to {skz.water::%player%}
+		add 50 to {skz.stomach::%player%}
+	if player's tool is stew:
+		add 300 to {skz.energy::%player%}
+		add 200 to {skz.water::%player%}
+		add 200 to {skz.stomach::%player%}
+on drink:
+	if player's tool is water bottle:
+		add 500 to {skz.water::%player%}
+		add 50 to {skz.stomach::%player%}
+	if player's tool is any potion:
+		add 330 to {skz.water::%player%}
+		add 33 to {skz.stomach::%player%}
+
+on damage:
+	if victim is in "skz":
+		if victim is player:
+			if attacker's tool is any spade, pickaxe or hoe:
+				add 100 to {skz.shock::%victim%}
+				add -30 to {skz.health::%victim%}
+				add -60 to {skz.blood::%victim%}
+				chance of 30%:
+					set {skz.status::%victim%} to "krwawi"
+					add 3500 to {skz.shock::%victim%}
+				if attacker's tool is any sword, axe or bow:
+					add 100 to {skz.shock::%victim%}
+					add -30 to {skz.health::%victim%}
+					add -60 to {skz.blood::%victim%}
+					chance of 90%:
+						set {skz.status::%victim%} to "krwawi"
+						add 6000 to {skz.shock::%victim%}
+			else:
+				add 50 to {skz.shock::%victim%}
+				add -5 to {skz.health::%victim%}
+				add -10 to {skz.blood::%victim%}
+				chance of 5%:
+					set {skz.status::%victim%} to "krwawi"
+					add 750 to {skz.shock::%victim%}
+	if attacker is in "skz":
+		if attacker is player:
+			add -1 to {skz.energy::%attacker%}
+	if damage cause is fall:
+		add -100 to {skz.health::%victim%}
+		chance of 20%:
+			set {skz.status::%victim%} to "zlamanie"
+			chance of 1/3:
+				add -200 to {skz.blood::%victim%}
+	if attacker is zombie, spider, skeleton, enderman or witch:
+		add 250 to {skz.shock::%victim%}
+		add -100 to {skz.health::%victim%}
+		add -150 to {skz.blood::%victim%}
+		chance of 20%:
+			set {skz.status::%victim%} to "krwawi"
+
+every minute:
+	loop all players:
+		if loop-player is in "skz":
+			if {skz.status::%loop-player%} is "glodny":
+				chance of 25%:
+					send "&e[Burczenie brzucha]" to loop-player
+				chance of 35%:
+					send "&eJestem glodny..." to loop-player
+			if {skz.status::%loop-player%} is "spragniony":
+				send "&ePic mi sie chce..." to loop-player
+			chance of 0.5%:
+				remove 64 of any raw meat from loop-player
+				give 64 rotten flesh to loop-player
+				chance of 5%:
+					remove 16 of any cooked meat from loop-player
+					give 16 rotten flesh to loop-player
+
+on rightclick:
+	if player is holding paper:
+		if {skz.status::%player%} is "krwawi":
+			remove 1 paper from player
+			wait 5 seconds
+			set {skz.status::%player%} to "zdrowy"
+	if player is holding leather:
+		if {skz.status::%player%} is "krwawi":
+			if player has 2 leather:
+				remove 2 leather from player
+				wait 5 seconds
+				set {skz.status::%player%} to "zdrowy"
+	if player is holding gunpowder:
+		if {skz.status::%player%} is "zatrucie":
+			remove 1 gunpowder from player
+			wait 30 seconds
+			set {skz.status::%player%} to "zdrowy"
+	if player is holding bone:
+		remove 1 bone from player
+		wait 1 second
+		add 40 to {skz.energy::%player%}
+		add 7 to {skz.water::%player%}
+		add 37 to {skz.stomach::%player%}
+	if player is holding wheat seeds:
+		if player has 5 wheat seeds:
+			remove 5 wheat seeds from player
+			wait 1 second
+			add 14 to {skz.energy::%player%}
+			add -35 to {skz.water::%player%}
+			add 80 to {skz.stomach::%player%}
+	# jedzenie otwartych puszek
+	if player is holding iron ingot named "&3Tunczyk (otwarty)":
+		remove 1 iron ingot named "&3Tunczyk (otwarty)" from player
+		wait 10 seconds
+		add 475 to {skz.energy::%player%}
+		add 144 to {skz.water::%player%}
+		add 240 to {skz.stomach::%player%}
+	if player is holding bucket named "&cBekon (otwarty)":
+		remove 1 bucket named "&cBekon (otwarty)" from player
+		wait 10 seconds
+		add 107 to {skz.energy::%player%}
+		add 3 to {skz.water::%player%}
+		add 255 to {skz.stomach::%player%}
+	if player is holding iron ingot named "&3Sardynki (otwarty)":
+		remove 1 iron ingot named "&3Sardynki (otwarty)" from player
+		wait 10 seconds
+		add 333 to {skz.energy::%player%}
+		add 96 to {skz.water::%player%}
+		add 160 to {skz.stomach::%player%}
+	if player is holding bucket named "&6Makaron (otwarty)":
+		remove 1 bucket named "&6Makaron (otwarty)" from player
+		wait 10 seconds
+		add 300 to {skz.energy::%player%}
+		add 324 to {skz.water::%player%}
+		add 400 to {skz.stomach::%player%}
+	if player is holding bucket named "&eBrzoskwinie (otwarty)":
+		remove 1 bucket named "&eBrzoskwinie (otwarty)" from player
+		wait 10 seconds
+		add 1360 to {skz.energy::%player%}
+		add 350 to {skz.water::%player%}
+		add 440 to {skz.stomach::%player%}
+	if player is holding bucket named "&6Makaron (otwarty)":
+		remove 1 bucket named "&6Makaron (otwarty)" from player
+		wait 10 seconds
+		add 462 to {skz.energy::%player%}
+		add 330 to {skz.water::%player%}
+		add 440 to {skz.stomach::%player%}
+on death:
+	if player has permission "skz.admin" or "skz.bypass.respawn":
+		set {skz.status::%player%} to "zdrowy"
+		set {skz.water::%player%} to 1800
+		set {skz.energy::%player%} to 1000
+		set {skz.blood::%player%} to 5000
+		set {skz.shock::%player%} to 0
+		set {skz.stomach::%player%} to 1000
+		set {skz.health::%player%} to 5000
+	else:
+		set {skz.respawn::%player%} to 600
+		set {skz.status::%player%} to "martwy"
+		kick player due to "&4Zginales!! Wroc na serwer za 10 minut"
+on connect:
+	if player has permission "skz.admin" or "skz.bypass.respawn":
+		stop
+	else:
+		if {skz.respawn::%player%} >= 1:
+			kick player due to "&cJeszcze sie nie odrodziles! Wroc za &3%{skz.respawn::%player%}% &csekund!"
+		else:
+			set {skz.status::%player%} to "zdrowy"
+			set {skz.water::%player%} to 1800
+			set {skz.energy::%player%} to 1000
+			set {skz.blood::%player%} to 5000
+			set {skz.shock::%player%} to 0
+			set {skz.stomach::%player%} to 1000
+			set {skz.health::%player%} to 5000
+
+
+command /skz [<text>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			send "&c&m--------------&c[ {@tag} &6by niccosaint &c]&c&m--------------"
+			send "&2/skz stat - &aSprawdz status twojego glodu, zdrowia itd."
+			send "&2/skz info <a|b> - &aInformacje o statach"
+		if arg 1 is "stat":
+			send "&c&m--------------&c[ {@tag} &6by niccosaint &c]&c&m--------------"
+			send "&eNick: &a%sender%      &bStatus: &c%{skz.status::%player%}%"
+			send "&6Energia: &e%{skz.energy::%player%}% / 5000 FPt"
+			send "&3Woda: &b%{skz.water::%player%}% / 5000 ml"
+			send "&eBrzuch: &c%{skz.stomach::%player%}% / 2500 ml"
+			send "&4Krew: %{skz.blood::%player%}% / 5000 ml"
+			send "&cZdrowie: %{skz.health::%player%}% / 5000 HP"
+			send "&7Szok: %{skz.shock::%player%}% / %{skz.blood::%player%}%"
+		if arg 1 is "info":
+			if arg 2 is "a":
+				send "&c&m--------------&c[ {@tag} &6by niccosaint &c]&c&m--------------"
+				send "&eStatusy: &aZdrowy, krwawi, zatrucie, zlamanie, glodny, spragniony,"
+				send "&anieprzytomny, martwy"
+				send "&6Energia: &epodawana w FPt (food points). Kazdy produkt spozywczy"
+				send "&eposiada ustalona ilosc FPt. Gdy posiada sie wystarczajaco duzo"
+				send "&epunktow mozliwa jest regeneracja krwi."
+				send "&3Woda: &bPodawana w ml (mililitrach). To samo co powyżej."
+				send "&eBrzuch: &6Podawana w ml (mililitrach). Pilnuj poziomu brzucha,"
+				send "&6poniewaz przy przekroczeniu bezpiecznego limitu 2500 ml grozi"
+				send "&6wymiotami. Im wiecej, tym wieksze ryzyko wymiotow, gdzie grozi"
+				send "&6utrata energii i odwodnieniem"
+				send "&c&m--------&c[ &6wiecej na nastepnej stronie &c]&c&m-------"
+			else if arg 2 is "b":
+				send "&c&m--------------&c[ {@tag} &6by niccosaint &c]&c&m--------------"
+				send "&4Krew: &cPodawana w ml (mililitrach). Podstwawowy czynnik przetrwania."
+				send "&c&lPodczas otrzymywania obrazen jest ryzyko krwawienia, ktore trzeba jak"
+				send "&c&lnajszybciej zatrzymac. Gdy sie ma wystarczajaco duzo energii i wody"
+				send "&c&lkrew sie regeneruje. Gdy poziom krwi osiagnie maksimum leczone jest"
+				send "&c&lzdrowie."
+				send "&cZdrowie: &3Podawane w HP (health points). Podstwawowy czynnik przetrwania."
+			else:
+				send "{@tag} &6Poprawne uzycie: &a/skz info <a|b>"
