@@ -1,0 +1,262 @@
+# =================
+# ThirstBar by niccosaint v 1.4
+# Wymaga ncCORE 1.2b lub nowszej
+# =================
+# Zakazane:
+# - Usuwanie tresci o autorze!                
+# - Udostepnaniu skryptu innym!               
+# - Podszywanie sie pod autora!               
+# - Uzywanie kodu skryptu w swoich skryptach! 
+# - Zarabianie na skrypcie!
+# Dozwolone:
+# - Zmienianie configu na wlasne potrzeby
+# - Dodawanie wlasnego kodu 
+# =================
+# Konfiguracja
+options:
+# Na jakich swiatach skrypt bedzie dzialal ?
+	world: "2033"
+	world2: "Survival"
+# Co ile sekund bedzie schodzilo pragnienie ?
+	cd: 30
+# Koniec konfigu
+on load:
+	set {nccore.working.thirst} to true
+on unload:
+	set {nccore.working.thirst} to false
+on join:
+	if {nccore.thirst.%player%} is not set:
+		set {nccore.thirst.%player%} to 100
+every {@cd} seconds:
+	loop all players in {@world} or {@world2}:
+		if gamemode of loop-player is not creative:
+			if {nccore.thirst.%loop-player%} > 100:
+				if {nccore.thirst.%loop-player%} > 149:
+					add -2 to {nccore.thirst.%loop-player%}
+					loop 10 times:
+						add 100 to {nccore.blood.%loop-player%}
+						wait 1 second
+				else:
+					add -2 to {nccore.thirst.%loop-player%}
+					loop 3 times:
+						add 100 to {nccore.blood.%loop-player%}
+						wait 1 second
+			if {nccore.thirst.%loop-player%} < 5:
+				send "&3Wody..." to loop-player
+			if {nccore.thirst.%loop-player%} > 1:
+				add -1 to {nccore.thirst.%loop-player%}
+			else:
+				kill loop-player
+				set {nccore.thirst.%loop-player%} to 100
+on drink:
+	if player is in {@world} or {@world2}:
+		if player's tool is water bottle named "&7Czysta woda":
+			add 10 to {nccore.thirst.%player%}
+		else if player's tool is water bottle:
+			add 5 to {nccore.thirst.%player%}
+on eat:
+	if player is in {@world} or {@world2}:
+		if player's tool is apple or melon:
+			add 2 to {nccore.thirst.%player%}
+		if player's tool is soup:
+			add 3 to {nccore.thirst.%player%}
+		if player's tool is carrot or potato:
+			add 1 to {nccore.thirst.%player%}
+		if player's tool is golden apple or enchanted golden apple:
+			add 10 to {nccore.thirst.%player%}			
+					
+command /water [<text>]:
+	permission: water.admin
+	permission message: &4Brak dostepu
+	trigger:
+		if arg 1 is not set:
+			send "&6&m----------&6< &4ThirstBar by niccosaint &6>&6&m----------" to player
+			send "&b/water get &a- Otrzymaj butelke czystej wody" to player
+			send "&b/water refill &a- Zaspokoj pragnienie" to player
+			send "&6&m------------------------------------" to player
+		if arg 1 is "get":
+			give 1 water bottle named "&7Czysta woda" to player
+		if arg 1 is "refill":
+			set {nccore.thirst.%player%} to 100
+command /thirst [<player>] [<number>]:
+	trigger:
+		if arg 1 is not set:
+			if {nccore.thirst.%player%} > 5:
+				if {nccore.thirst.%player%} > 10:
+					if {nccore.thirst.%player%} > 15:
+						if {nccore.thirst.%player%} > 20:
+							if {nccore.thirst.%player%} > 25:
+								if {nccore.thirst.%player%} > 30:
+									if {nccore.thirst.%player%} > 35:
+										if {nccore.thirst.%player%} > 40:
+											if {nccore.thirst.%player%} > 45:
+												if {nccore.thirst.%player%} > 50:
+													if {nccore.thirst.%player%} > 55:
+														if {nccore.thirst.%player%} > 60:
+															if {nccore.thirst.%player%} > 65:
+																if {nccore.thirst.%player%} > 70:
+																	if {nccore.thirst.%player%} > 75:
+																		if {nccore.thirst.%player%} > 80:
+																			if {nccore.thirst.%player%} > 85:
+																				if {nccore.thirst.%player%} > 90:
+																					if {nccore.thirst.%player%} > 95:
+																						if {nccore.thirst.%player%} >= 100:
+																							if {nccore.thirst.%player%} > 100:
+																								send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																								send "&b|||||||&e&lFULL&b|||||||||&a+"
+																							else:
+																								send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																								send "&b|||||||&e&lFULL&b|||||||||"
+																						else:
+																							send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																							send "&b|||||||||||||||||||&0|"
+																					else:
+																						send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																						send "&b||||||||||||||||||&0||"
+																				else:
+																					send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																					send "&b|||||||||||||||||&0|||"
+																			else:
+																				send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																				send "&b||||||||||||||||&0||||"
+																		else:
+																			send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																			send "&b|||||||||||||||&0|||||"
+																	else:
+																		send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																		send "&3||||||||||||||&0||||||"
+																else:
+																	send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																	send "&3|||||||||||||&0|||||||"
+															else:
+																send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																send "&3||||||||||||&0||||||||"
+														else:
+															send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+															send "&3|||||||||||&0|||||||||"
+													else:
+														send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+														send "&3|||||||||||&0|||||||||"
+												else:
+													send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+													send "&3||||||||||&0||||||||||"
+											else:
+												send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+												send "&3|||||||||&0|||||||||||"
+										else:
+											send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+											send "&3||||||||&0||||||||||||"
+									else:
+										send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+										send "&3|||||||&0|||||||||||||"
+								else:
+									send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+									send "&3||||||&0||||||||||||||"
+							else:
+								send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+								send "&3|||||&0|||||||||||||||"
+						else:
+							send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+							send "&1||||&0||||||||||||||||"
+					else:
+						send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+						send "&1|||&0||||||||||||&4ALERT"
+				else:
+					send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+					send "&1||&0|||||||||||||&4ALERT"
+			else:
+				send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+				send "&1|&0||||||||||||||&4ALERT"
+		if arg 1 is set:
+			if {nccore.thirst.%arg 1%} > 5:
+				if {nccore.thirst.%arg 1%} > 10:
+					if {nccore.thirst.%arg 1%} > 15:
+						if {nccore.thirst.%arg 1%} > 20:
+							if {nccore.thirst.%arg 1%} > 25:
+								if {nccore.thirst.%arg 1%} > 30:
+									if {nccore.thirst.%arg 1%} > 35:
+										if {nccore.thirst.%arg 1%} > 40:
+											if {nccore.thirst.%arg 1%} > 45:
+												if {nccore.thirst.%arg 1%} > 50:
+													if {nccore.thirst.%arg 1%} > 55:
+														if {nccore.thirst.%arg 1%} > 60:
+															if {nccore.thirst.%arg 1%} > 65:
+																if {nccore.thirst.%arg 1%} > 70:
+																	if {nccore.thirst.%arg 1%} > 75:
+																		if {nccore.thirst.%arg 1%} > 80:
+																			if {nccore.thirst.%arg 1%} > 85:
+																				if {nccore.thirst.%arg 1%} > 90:
+																					if {nccore.thirst.%arg 1%} > 95:
+																						if {nccore.thirst.%arg 1%} >= 100:
+																							if {nccore.thirst.%player%} > 100:
+																								send "&3PRAGNIENIE / THIRST ( %sender% ) &a[%{nccore.thirst.%player%}%]"
+																								send "&b|||||||&e&lFULL&b|||||||||&a+"
+																							else:
+																								send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																								send "&b|||||||&e&lFULL&2|||||||||"
+																						else:
+																							send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																							send "&b|||||||||||||||||||&0|"
+																					else:
+																						send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																						send "&b||||||||||||||||||&0||"
+																				else:
+																					send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																					send "&b|||||||||||||||||&0|||"
+																			else:
+																				send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																				send "&b||||||||||||||||&0||||"
+																		else:
+																			send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																			send "&b|||||||||||||||&0|||||"
+																	else:
+																		send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																		send "&3||||||||||||||&0||||||"
+																else:
+																	send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																	send "&3|||||||||||||&0|||||||"
+															else:
+																send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+																send "&3||||||||||||&0||||||||"
+														else:
+															send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+															send "&3|||||||||||&0|||||||||"
+													else:
+														send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+														send "&3|||||||||||&0|||||||||"
+												else:
+													send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+													send "&3||||||||||&0||||||||||"
+											else:
+												send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+												send "&3|||||||||&0|||||||||||"
+										else:
+											send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+											send "&3||||||||&0||||||||||||"
+									else:
+										send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+										send "&3|||||||&0|||||||||||||"
+								else:
+									send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+									send "&3||||||&0||||||||||||||"
+							else:
+								send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+								send "&3|||||&0|||||||||||||||"
+						else:
+							send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+							send "&1||||&0||||||||||||||||"
+					else:
+						send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+						send "&1|||&0||||||||||||&4ALERT"
+				else:
+					send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+					send "&1||&0|||||||||||||&4ALERT"
+			else:
+				send "&3PRAGNIENIE / THIRST ( %arg 1% ) &a[%{nccore.thirst.%arg 1%}%]"
+				send "&1|&0||||||||||||||&4ALERT"
+			if arg 2 is set:
+				if sender has permission "thirst.admin":
+					set {nccore.thirst.%arg 1%} to arg 2
+					send "&2Ustawiono poziom pragnienia %arg 1% do %arg 2%"
+				else:
+					send "&4Brak dostepu"
