@@ -1,0 +1,251 @@
+variables:
+	{reaper.%player%.mode} = 0
+	{reaper.%player%.soul} = 1000
+	{reaper.%player%.multi} = 1
+	{reaper.%player%.toggle} = true	
+options:
+	reaper.chance: 1.5% # Szansa na drop kosy z zombie lub szkieleta
+	wand.thrust: 1 # Modyfikator mocy lotu
+	soul.death: -1000 # Modyfikator poziomu duszy za smierc
+	soul.use: -10 # Modyfikator poziomu duszy przy uzyciu
+	soul.item.drop: 2.5% # Szansa na dusze przy zabiciu creepera, pajaka lub endermana
+	boost.delay: 90 # Odstep pomiedzy aktywacjami
+	boost.duration: 90 # Dlugosc aktywacji supermocy. Zalecane, gdy: boost.duration = boost.delay
+	tag: &3[&bReaper&3]
+	tag.success: &aSUKCES!
+	tag.warn: &cUWAGA!
+	tag.error: &4BLAD	
+on script load:
+	send "{@tag} &a&lWlaczony!" to console
+on script unload:
+	send "{@tag} &4&lWylaczony!" to console
+on join: # Ustawianie zmiennych dla nowego gracza
+	if {reaper.%player%.mode} is not set:
+		set {reaper.%player%.mode} to 0
+	if {reaper.%player%.soul} is not set:
+		set {reaper.%player%.soul} to 1000
+	if {reaper.%player%.multi} is not set:
+		set {reaper.%player%.multi} to 1
+	if {reaper.%player%.toggle} is not set:
+		set {reaper.%player%.toggle} to true
+on rightclick: # Zmiana trybu kosy
+	if player's tool is iron hoe named "&3Kosa Kosiarza":
+		if {reaper.%player%.mode} = 0:
+			set {reaper.%player%.mode} to 1
+			send "&3Tryb: &b&lLOT"
+		else if {reaper.%player%.mode} = 1:
+			set {reaper.%player%.mode} to 2
+			send "&3Tryb: &4&lATAK"
+		else if {reaper.%player%.mode} = 2:
+			set {reaper.%player%.mode} to 3
+			send "&3Tryb: &1&lKOLEKTOR DUSZ"
+		else if {reaper.%player%.mode} = 3:
+			set {reaper.%player%.mode} to 0
+			send "&3Tryb: &7&lBRAK"			
+on leftclick:
+	if player's tool is iron hoe named "&3Kosa Kosiarza":
+		if {reaper.%player%.mode} = 1: # Tryb lotu
+			if {reaper.%player%.soul} >= 10:
+				add -10 to {reaper.%player%.soul}
+				push the player upwards at speed ({reaper.%player%.multi}*{@wand.thrust}/1.5)
+				push the player forward at speed ({reaper.%player%.multi}*{@wand.thrust}*2)
+			else:
+				send "&7Nie mam sil..."
+		if {reaper.%player%.mode} = 3: # Tryb kolektora - dodawanie punktow z dusz
+			if player has 1 nether star named "&bDusza":
+				remove 1 nether star named "&bDusza" from player
+				add 200 to {reaper.%player%.soul}
+				send "&3Napelniono poziom duszy (+200 pkt.)"				
+on damage:
+	if attacker's tool is iron hoe named "&3Kosa Kosiarza":
+		if {reaper.%attacker%.mode} = 2: # Tryb Ataku
+			if {reaper.%attacker%.soul} >= ({@soul.use}*{reaper.%attacker%.multi}):
+				add ({@soul.use}*{reaper.%attacker%.multi}) to {reaper.%attacker%.soul}
+				repair attacker's tool
+				damage victim by (3*{reaper.%attacker%.multi}) hearts
+			else:
+				send "&7Nie mam sil..."
+				cancel event
+		if {reaper.%attacker%.mode} = 3: # Tryb Kolektora
+			repair attacker's tool
+			add ({reaper.%attacker%.multi}*5) to {reaper.%attacker%.soul}
+			apply slowness to victim for 5 seconds
+			apply nausea to victim for 5 seconds
+			damage victim by {reaper.%attacker%.multi} hearts
+		else:
+			cancel event
+	if victim's tool is iron hoe named "&3Kosa Kosiarza":
+		if damage cause is fall or contact: # Osoba posiadajaca w reku kose nie otrzymuje obrazen od upadku i kaktusa
+			cancel event
+on death:
+	if attacker's tool is iron hoe named "&3Kosa Kosiarza":
+		if victim is player or villager: # -> 2 dusze
+			give 1 nether star named "&bDusza" to attacker
+			add {@soul.death} to {reaper.%victim%.soul}
+		if victim is creeper, spider or enderman: # -?> 1 dusza
+			chance of ({@soul.item.drop}*{reaper.%attacker%.multi}):
+				give 1 nether star named "&bDusza" to attacker
+	if victim is zombie or skeleton: # -?> Kosa kosiarza
+		chance of ({@reaper.chance}*{reaper.%attacker%.multi}):
+			give 1 iron hoe named "&3Kosa Kosiarza" to attacker		
+every {@boost.delay} seconds:
+	loop all players:
+		if {reaper.%loop-player%.soul} < 0: # Zerowanie negatywnych punktow duszy
+			set {reaper.%loop-player%.soul} to 0
+		if {reaper.%loop-player%.toggle} = true: # Autowlaczanie supermocy
+			if {reaper.%loop-player%.soul} >= 100:
+				add -100 to {reaper.%loop-player%.soul}
+				apply speed {reaper.%loop-player%.multi} to loop-player for {@boost.duration} seconds 
+				apply jump boost {reaper.%loop-player%.multi} to loop-player for {@boost.duration} seconds
+				apply haste {reaper.%loop-player%.multi} to loop-player for {@boost.duration} seconds
+				apply strength {reaper.%loop-player%.multi} to loop-player for {@boost.duration} seconds
+				apply saturation {reaper.%loop-player%.multi} to loop-player for {@boost.duration} seconds
+				apply night vision to loop-player for {@boost.duration} seconds
+			else:
+				execute loop-player command "/reaper toggle"
+				send "{@tag} {@tag.warn} Autowlaczanie supermocy zostalo wylaczone" to loop-player
+				send "&cze wzgledu na poziom duszy. Wbij wiecej punktow, a potem wpisz" to loop-player
+				send "&ckomende &6/reaper toggle" to loop-player
+		if {reaper.%loop-player%.soul} < 998: # Regeneracja duszy do 1000 pkt.
+			add 2 to {reaper.%loop-player%.soul}
+command /reaper [<text>] [<player>] [<number>]:
+	trigger:
+		if arg 1 is not set:
+			send "&3&m--------------&3[ &b&lREAPER by niccosaint &3]&3&m--------------"
+			send "&b<> - Wymagane [] - Opcjonalnie"
+			send "&2Dla wszystkich &6Dla VIP &4Dla adminow &0Tylko Konsola"
+			send " "
+			send "&2/reaper settings &b- Ustawienia"
+			send "&2/reaper soul [nick] &b- Sprawdz ilosc duszy"
+			send "&2/reaper toggle &b- Wlacz/wylacz aktywacje supermocy"
+			send "&6/reaper power &b- Wymus aktywacje supermocy (30 sek)"
+			send "&6/reaper multi <nick> <1|2&4|3> &b- Modyfikator dzialania"
+			send "&4/reaper give <nick> <1(kosa)|2(dusza)> &b- Otrzymaj wazne przedmioty"
+			send "&4/reaper modify <nick> <ilosc> &b- Zmodyfikuj graczowi poziom duszy"
+			send "&4/reaper set <nick> <ilosc> &b- Ustaw graczowi poziom duszy"
+			send "&0/reaper reset <nick> &b- Wyzeruj graczowi statystyki"
+		if arg 1 is "soul":
+			if arg 2 is set:
+				send "&3DUSZA (%arg 2%): %{reaper.%arg 2%.soul}% pkt."
+			else:
+				send "&3DUSZA (%sender%): %{reaper.%sender%.soul}% pkt."
+		if arg 1 is "toggle":
+			if {reaper.%sender%.toggle} = true:
+				set {reaper.%sender%.toggle} to false
+			else if {reaper.%sender%.toggle} = false:
+				set {reaper.%sender%.toggle} to true
+		if arg 1 is "power":
+			if sender has permission "reaper.vip":
+				if {reaper.%player%.soul} >= 100:
+					add -100 to {reaper.%player%.soul}
+					apply speed {reaper.%player%.multi} to player for 30 seconds 
+					apply jump boost {reaper.%player%.multi} to player for 30 seconds
+					apply haste {reaper.%player%.multi} to player for 30 seconds
+					apply strength {reaper.%player%.multi} to player for 30 seconds
+					apply saturation {reaper.%player%.multi} to player for 30 seconds
+					apply night vision to player for 30 seconds
+				else:
+					send "{@tag} {@tag.warn} Za malo punktow duszy :/"
+			else:
+				send "{@tag} {@tag.error} Brak dostepu do tej komendy"
+		if arg 1 is "multi":
+			if sender has permission "reaper.vip":
+				if arg 2 is set:
+					if arg 2 is not sender:
+						if sender has permission "reaper.admin":
+							if arg 3 is 1:
+								set {reaper.%arg 2%.multi} to 1
+								send "{@tag} {@tag.success} Nowy modyfikator: &e&l%{reaper.%arg 2%.multi}%"
+							if arg 3 is 2:
+								set {reaper.%arg 2%.multi} to 2
+								send "{@tag} {@tag.success} Nowy modyfikator: &e&l%{reaper.%arg 2%.multi}%"
+							if arg 3 is 3:
+								if arg 2 has permission "reaper.admin":
+									set {reaper.%arg 2%.multi} to 3
+									send "{@tag} {@tag.success} Nowy modyfikator: &e&l%{reaper.%arg 2%.multi}%"
+								else:
+									send "{@tag} {@tag.error} Uzytkownik nie ma dostepu do tego ustawienia"
+							else:
+								send "&6/reaper multi <nick> <1|2&4|3> &b- Modyfikator dzialania"
+						else:
+							send "{@tag} {@tag.error} Brak dostepu do ustawiania komus modyfikatora"
+					if arg 3 is 1:
+						set {reaper.%sender%.multi} to 1
+						send "{@tag} {@tag.success} Nowy modyfikator: &e&l%{reaper.%sender%.multi}%"
+					if arg 3 is 2:
+						set {reaper.%sender%.multi} to 2
+						send "{@tag} {@tag.success} Nowy modyfikator: &e&l%{reaper.%sender%.multi}%"
+					if arg 3 is 3:
+						if sender has permission "reaper.admin":
+							set {reaper.%sender%.multi} to 3
+							send "{@tag} {@tag.success} Nowy modyfikator: &e&l%{reaper.%sender%.multi}%"
+						else:
+							send "{@tag} {@tag.error} Brak dostepu do tego ustawienia"
+				else:
+					send "&6/reaper multi <nick> <1|2&4|3> &b- Modyfikator dzialania"
+			else:
+				send "{@tag} {@tag.error} Brak dostepu do tej komendy"
+		if arg 1 is "settings":
+			send "&2Ustawienia:"
+			send "&bAktywacja supermocy: 100 pkt."
+			send "&bDlugosc supermocy: {@boost.duration} sek."
+			send "&ePoziom supermocy: x %{reaper.%sender%.multi}%"
+			send "&6Sila odrzutu w przod (tryb lotu): %({reaper.%sender%.multi}*{@wand.thrust}*2)%G"
+			send "&6Sila odrzutu w gore (tryb lotu): %({reaper.%sender%.multi}*{@wand.thrust}/1.5)%G"
+			send "&5Dlugosc opetania (tryb kolektora): 5 sek."
+			send "&1Pobor duszy (tryb kolektora): %({reaper.%sender%.multi}*5)% pkt."
+			send "&4Obrazenia (tryb ataku): %(6*{reaper.%sender%.multi})% HP"
+			send "&cKoszt duszy (tryb ataku) %({@soul.use}*{reaper.%sender%.multi})% pkt."
+		if arg 1 is "give":
+			if sender has permission "reaper.admin":
+				if arg 2 is set:
+					if arg 3 is 1:
+						give 1 iron hoe named "&3Kosa Kosiarza" to player
+					if arg 3 is 2:
+						give 1 nether star named "&bDusza" to player
+					else:
+						send "&4/reaper get <nick> <1(kosa)|2(dusza)> &b- Otrzymaj przedmiot"
+				else:
+					send "&4/reaper get <nick> <1(kosa)|2(dusza)> &b- Otrzymaj przedmiot"
+			else:
+				send "{@tag} {@tag.error} Brak dostepu do tej komendy"
+		if arg 1 is "modify":
+			if sender has permission "reaper.admin":
+				if arg 2 is set:
+					if arg 3 is set:
+						add arg 3 to {reaper.%arg 2%.soul}
+					else:
+						send "{@tag} {@tag.error} &6Popraw &3&nzaznaczony &6tekst"
+						send "&3/reaper modify %arg 2% &3&n<ilosc>"
+				else:
+					send "{@tag} {@tag.error} &6Popraw &3&nzaznaczony &6tekst"
+					send "&3/soul get &3&n<nick> &3<ilosc>"
+			else:
+				send "{@tag} {@tag.error} Brak dostepu do tej komendy"
+		if arg 1 is "set":
+			if sender has permission "reaper.admin":
+				if arg 2 is set:
+					if arg 3 is set:
+						set {reaper.%arg 2%.soul} to arg 3
+					else:
+						send "{@tag} {@tag.error} &6Popraw &3&nzaznaczony &6tekst"
+						send "&3/reaper set %arg 2% &3&n<ilosc>"
+				else:
+					send "{@tag} {@tag.error} &6Popraw &3&nzaznaczony &6tekst"
+					send "&3/reaper set &3&n<nick> &3<ilosc>"
+			else:
+				send "{@tag} {@tag.error} Brak dostepu do tej komendy"
+		if arg 1 is "reset":
+			if sender is console:
+				if arg 2 is set:
+					send "{@tag} &1Zerowanie statystyk gracza %arg 2%"
+					delete {reaper.%arg 2%.soul}
+					set {reaper.%arg 2%.soul} to 1000
+					set {reaper.%arg 2%.mode} to 0
+					set {reaper.%arg 2%.multi} to 1
+					set {reaper.%arg 2%.toggle} to true
+					send "{@tag} {@tag.success} Wyzerowano!"
+				else:
+					send "&7/reaper reset <nick> &b- Wyzeruj graczowi statystyki"
+			else:
+				send "{@tag} {@tag.error} Te komende mozna wywolac TYLKO z konsoli"
