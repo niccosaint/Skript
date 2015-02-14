@@ -1,0 +1,396 @@
+variables:
+	{nccore.working.thirst} = false
+	{nccore.hits.%player%} = 0
+	{nccore.blood.%player%} = 60000
+	{nccore.thirst.%player%} = 100
+options:
+	bleed: 100 #Przy ilu atakach na nas zaczniemy krwawic
+# Efekty przy utracie krwi,
+# czyli jesli gracz ma mniej krwi niz tutaj
+# to wtedy dostaje te efekty
+	nausea: 25000 #Mdlosci
+	blindness: 10000 #Oslepienie
+	poison: 4500 #Zatrucie
+	death: 1000 #Natychmiastowa smierc
+	
+on load:
+	send "&b&l[&encCORE&b&l] &aWlaczony!" to console
+	wait 3 seconds
+	send "&b&l[&encCORE&b&l] &aWlaczone moduly:" to console
+	send "&3Pragnienie: %{nccore.working.thirst}%" to console
+on unload:
+	send "&b&l[&encCORE&b&l] &4Wylaczony!" to console
+	
+on damage:
+	if victim is player:
+		add -10 to {nccore.blood.%victim%}
+		add 1 to {nccore.hits.%victim%}
+		if attacker is zombie:
+			add -50 to {nccore.blood.%victim%}
+		if attacker is skeleton:
+			add -600 to {nccore.blood.%victim%}
+		if attacker is spider:
+			add -300 to {nccore.blood.%victim%}
+		if attacker is enderman:
+			add -800 to {nccore.blood.%victim%}
+		if attacker's tool is any spade:
+			add -200 to {nccore.blood.%victim%}
+		if attacker's tool is any pickaxe:
+			add -350 to {nccore.blood.%victim%}
+		if attacker's tool is any axe:
+			add -500 to {nccore.blood.%victim%}
+		if attacker's tool is any sword:
+			add -100 to {nccore.blood.%victim%}
+			if attacker's tool is wooden sword:
+				add -400 to {nccore.blood.%victim%}
+			if attacker's tool is stone sword:
+				add -550 to {nccore.blood.%victim%}
+			if attacker's tool is gold sword:
+				add -650 to {nccore.blood.%victim%}
+			if attacker's tool is iron sword:
+				add -700 to {nccore.blood.%victim%}
+			if attacker's tool is diamond sword:
+				add -1000 to {nccore.blood.%victim%}
+		if damage cause is fire:
+			add -1000 to {nccore.blood.%victim%}
+		if damage cause is fall:
+			add -4000 to {nccore.blood.%victim%}
+		if damage cause is lava:
+			add -20000 to {nccore.blood.%victim%}
+		if damage cause is drowning:
+			add -3000 to {nccore.blood.%victim%}
+		if damage cause is block explosion:
+			add -4000 to {nccore.blood.%victim%}
+		if damage cause is entity explosion:
+			add -3200 to {nccore.blood.%victim%}
+		if damage cause is void:
+			add -50000 to {nccore.blood.%victim%}
+		if damage cause is lightning:
+			add -10000 to {nccore.blood.%victim%}
+		if damage cause is starvation:
+			add -750 to {nccore.blood.%victim%}
+		if damage cause is potion:
+			add -5000 to {nccore.blood.%victim%}
+		if damage cause is poison:
+			add -5000 to {nccore.blood.%victim%}
+		if damage cause is wither:
+			add -10000 to {nccore.blood.%victim%}
+		if damage cause is falling block:
+			add -500 to {nccore.blood.%victim%}
+		if {nccore.hits.%victim%} >= {@bleed}:
+			add -50 to {nccore.blood.%victim%}
+			send "&cKRWAWISZ! / YOU BLEED" to victim
+on hunger bar change:
+	add 5 to {nccore.blood.%player%}
+every second:
+	loop all players:
+		if {nccore.blood.%loop-player%} > 3000:
+			if {nccore.blood.%loop-player%} > 6000:
+				if {nccore.blood.%loop-player%} > 9000:
+					if {nccore.blood.%loop-player%} > 12000:
+						if {nccore.blood.%loop-player%} > 15000:
+							if {nccore.blood.%loop-player%} > 18000:
+								if {nccore.blood.%loop-player%} > 21000:
+									if {nccore.blood.%loop-player%} > 24000:
+										if {nccore.blood.%loop-player%} > 27000:
+											if {nccore.blood.%loop-player%} > 30000:
+												if {nccore.blood.%loop-player%} > 33000:
+													if {nccore.blood.%loop-player%} > 36000:
+														if {nccore.blood.%loop-player%} > 39000:
+															if {nccore.blood.%loop-player%} > 42000:
+																if {nccore.blood.%loop-player%} > 45000:
+																	if {nccore.blood.%loop-player%} > 48000:
+																		if {nccore.blood.%loop-player%} > 51000:
+																			if {nccore.blood.%loop-player%} > 54000:
+																				if {nccore.blood.%loop-player%} > 57000:
+																					if {nccore.blood.%loop-player%} >= 60000:
+																						set loop-player's health to 10
+																					else:
+																						set loop-player's health to 9.5
+																				else:
+																					set loop-player's health to 9
+																			else:
+																				set loop-player's health to 8.5
+																		else:
+																			set loop-player's health to 8
+																	else:
+																		set loop-player's health to 7.5
+																else:
+																	set loop-player's health to 7
+															else:
+																set loop-player's health to 6.5
+														else:
+															set loop-player's health to 6
+													else:
+														set loop-player's health to 5.5
+												else:
+													set loop-player's health to 5
+											else:
+												set loop-player's health to 4.5
+										else:
+											set loop-player's health to 4
+									else:
+										set loop-player's health to 3.5
+								else:
+									set loop-player's health to 3
+							else:
+								set loop-player's health to 2.5
+						else:
+							set loop-player's health to 2
+					else:
+						set loop-player's health to 1.5
+				else:
+					set loop-player's health to 1
+			else:
+				set loop-player's health to 0.5
+		else:
+			set loop-player's health to 0.5
+		if {nccore.hits.%loop-player%} >= {@bleed}:
+			add -25 to {nccore.blood.%loop-player%}
+			chance of 10%:
+				add -1 to {nccore.hits.%loop-player%}
+		else:
+			add 1 to {nccore.blood.%loop-player%}
+		if {nccore.blood.%loop-player%} > 60000:
+			set {nccore.blood.%loop-player%} to 60000
+		if {nccore.blood.%loop-player%} <= {@nausea}:
+			apply nausea to loop-player for 5 seconds
+		if {nccore.blood.%loop-player%} > {@nausea}:
+			remove nausea from loop-player
+		if {nccore.blood.%loop-player%} <= {@blindness}:
+			apply blindness to loop-player for 5 seconds
+		if {nccore.blood.%loop-player%} > {@blindness}:
+			remove blindness from loop-player
+		if {nccore.blood.%loop-player%} <= {@poison}:
+			apply poison to loop-player for 5 seconds
+		if {nccore.blood.%loop-player%} > {@poison}:
+			remove poison from loop-player
+		if {nccore.blood.%loop-player%} <= {@death}:
+			kill loop-player
+			set {nccore.blood.%loop-player%} to 30000
+every 30 seconds:
+	loop all players:
+		add -1 to {nccore.hits.%loop-player%}
+		if {nccore.hits.%loop-player%} < 0:
+			set {nccore.hits.%loop-player%} to 0
+on rightclick:
+	if player's tool is paper named "&7Bandage":
+		remove 1 paper named "&7Bandage" from player
+		add -30 to {nccore.hits.%player%}
+		send "&aKrwawienie zatrzymane / Bleeding stopped" to player
+
+command /bleed [<player>] [<number>]:
+	trigger:
+		if arg 1 is not set:
+			if {nccore.hits.%player%} = 0:
+				send "&cPUNKTY KRWAWIENIA / BLEEDING POINTS &3( %sender% ) &20/{@bleed}"
+			else:
+				if {nccore.hits.%player%} = 1:
+					send "&cPUNKTY KRWAWIENIA / BLEEDING POINTS &3( %sender% ) &a1/{@bleed}"
+				else:
+					if {nccore.hits.%player%} > {@bleed}:
+						send "&4PUNKTY KRWAWIENIA / BLEEDING POINTS &3( %sender% ) &4%{nccore.hits.%player%}%/{@bleed}"
+					else:
+						send "&cPUNKTY KRWAWIENIA / BLEEDING POINTS &3( %sender% ) &e%{nccore.hits.%player%}%/{@bleed}"
+		if arg 1 is set:
+			if {nccore.hits.%arg 1%} = 0:
+				send "&cPUNKTY KRWAWIENIA / BLEEDING POINTS &3( %arg 1% ) &20/{@bleed}"
+			else:
+				if {nccore.hits.%arg 1%} = 1:
+					send "&cPUNKTY KRWAWIENIA / BLEEDING POINTS &3( %arg 1% ) &a1/{@bleed}"
+				else:
+					if {nccore.hits.%player%} > {@bleed}:
+						send "&4PUNKTY KRWAWIENIA / BLEEDING POINTS &3( %arg 1% ) &4%{nccore.hits.%player%}%/{@bleed}"
+					else:
+						send "&cPUNKTY KRWAWIENIA / BLEEDING POINTS &3( %arg 1% ) &e%{nccore.hits.%arg 1%}%/{@bleed}"
+			if arg 2 is set:
+				if sender has permission "nccore.admin":
+					set {nccore.hits.%arg 1%} to arg 2
+					send "&2Ustawiono poziom krwawienia %arg 1% do %arg 2%"
+				else:
+					send "&4Brak dostepu"
+command /blood [<player>] [<number>]:
+	trigger:
+		if arg 1 is not set:
+			if {nccore.blood.%player%} > 3000:
+				if {nccore.blood.%player%} > 6000:
+					if {nccore.blood.%player%} > 9000:
+						if {nccore.blood.%player%} > 12000:
+							if {nccore.blood.%player%} > 15000:
+								if {nccore.blood.%player%} > 18000:
+									if {nccore.blood.%player%} > 21000:
+										if {nccore.blood.%player%} > 24000:
+											if {nccore.blood.%player%} > 27000:
+												if {nccore.blood.%player%} > 30000:
+													if {nccore.blood.%player%} > 33000:
+														if {nccore.blood.%player%} > 36000:
+															if {nccore.blood.%player%} > 39000:
+																if {nccore.blood.%player%} > 42000:
+																	if {nccore.blood.%player%} > 45000:
+																		if {nccore.blood.%player%} > 48000:
+																			if {nccore.blood.%player%} > 51000:
+																				if {nccore.blood.%player%} > 54000:
+																					if {nccore.blood.%player%} > 57000:
+																						if {nccore.blood.%player%} >= 60000:
+																							send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																							send "&2|||||||&e&lFULL&2|||||||||"
+																						else:
+																							send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																							send "&2|||||||||||||||||||&0|"
+																					else:
+																						send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																						send "&2||||||||||||||||||&0||"
+																				else:
+																					send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																					send "&2|||||||||||||||||&0|||"
+																			else:
+																				send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																				send "&2||||||||||||||||&0||||"
+																		else:
+																			send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																			send "&a|||||||||||||||&0|||||"
+																	else:
+																		send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																		send "&a||||||||||||||&0||||||"
+																else:
+																	send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																	send "&a|||||||||||||&0|||||||"
+															else:
+																send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+																send "&a||||||||||||&0||||||||"
+														else:
+															send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+															send "&a|||||||||||&0|||||||||"
+													else:
+														send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+														send "&a|||||||||||&0|||||||||"
+												else:
+													send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+													send "&a||||||||||&0||||||||||"
+											else:
+												send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+												send "&e|||||||||&0|||||||||||"
+										else:
+											send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+											send "&e||||||||&0||||||||||||"
+									else:
+										send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+										send "&e|||||||&0|||||||||||||"
+								else:
+									send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+									send "&6||||||&0||||||||||||||"
+							else:
+								send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+								send "&6|||||&0|||||||||||||||"
+						else:
+							send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+							send "&6||||&0||||||||||||||||"
+					else:
+						send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+						send "&4|||&0||||||||||||&4ALERT"
+				else:
+					send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+					send "&4||&0|||||||||||||&4ALERT"
+			else:
+				send "&4KREW / BLOOD ( %sender% ) &a[%{nccore.blood.%player%}%]"
+				send "&4|&0||||||||||||||&4ALERT"
+		if arg 1 is set:
+			if {nccore.blood.%arg 1%} > 3000:
+				if {nccore.blood.%arg 1%} > 6000:
+					if {nccore.blood.%arg 1%} > 9000:
+						if {nccore.blood.%arg 1%} > 12000:
+							if {nccore.blood.%arg 1%} > 15000:
+								if {nccore.blood.%arg 1%} > 18000:
+									if {nccore.blood.%arg 1%} > 21000:
+										if {nccore.blood.%arg 1%} > 24000:
+											if {nccore.blood.%arg 1%} > 27000:
+												if {nccore.blood.%arg 1%} > 30000:
+													if {nccore.blood.%arg 1%} > 33000:
+														if {nccore.blood.%arg 1%} > 36000:
+															if {nccore.blood.%arg 1%} > 39000:
+																if {nccore.blood.%arg 1%} > 42000:
+																	if {nccore.blood.%arg 1%} > 45000:
+																		if {nccore.blood.%arg 1%} > 48000:
+																			if {nccore.blood.%arg 1%} > 51000:
+																				if {nccore.blood.%arg 1%} > 54000:
+																					if {nccore.blood.%arg 1%} > 57000:
+																						if {nccore.blood.%arg 1%} >= 60000:
+																							send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																							send "&2|||||||&e&lFULL&2|||||||||"
+																						else:
+																							send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																							send "&2|||||||||||||||||||&0|"
+																					else:
+																						send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																						send "&2||||||||||||||||||&0||"
+																				else:
+																					send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																					send "&2|||||||||||||||||&0|||"
+																			else:
+																				send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																				send "&2||||||||||||||||&0||||"
+																		else:
+																			send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																			send "&a|||||||||||||||&0|||||"
+																	else:
+																		send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																		send "&a||||||||||||||&0||||||"
+																else:
+																	send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																	send "&a|||||||||||||&0|||||||"
+															else:
+																send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+																send "&a||||||||||||&0||||||||"
+														else:
+															send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+															send "&a|||||||||||&0|||||||||"
+													else:
+														send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+														send "&a|||||||||||&0|||||||||"
+												else:
+													send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+													send "&a||||||||||&0||||||||||"
+											else:
+												send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+												send "&e|||||||||&0|||||||||||"
+										else:
+											send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+											send "&e||||||||&0||||||||||||"
+									else:
+										send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+										send "&e|||||||&0|||||||||||||"
+								else:
+									send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+									send "&6||||||&0||||||||||||||"
+							else:
+								send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+								send "&6|||||&0|||||||||||||||"
+						else:
+							send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+							send "&6||||&0||||||||||||||||"
+					else:
+						send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+						send "&4|||&0||||||||||||&4ALERT"
+				else:
+					send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+					send "&4||&0|||||||||||||&4ALERT"
+			else:
+				send "&4KREW / BLOOD ( %arg 1% ) &a[%{nccore.blood.%arg 1%}%]"
+				send "&4|&0||||||||||||||&4ALERT"
+			if arg 2 is set:
+				if sender has permission "nccore.admin":
+					set {nccore.blood.%arg 1%} to arg 2
+					send "&2Ustawiono poziom krwi %arg 1% do %arg 2%"
+				else:
+					send "&4Brak dostepu"
+					
+command /nccore:
+	trigger:
+		send "&3&m--------------&3[ &e&lncCORE by niccosaint &3]&3&m--------------"
+		send "&b<> - Wymagane [] - Opcjonalnie"
+		send "&2Dla wszystkich &6Dla VIP &4Dla adminow &0Tylko Konsola"
+		send " "
+		send "&2/blood &4[nowa ilosc] &b- Sprawdz poziom krwi"
+		send "&2/bleed &4[nowa ilosc] &b- Sprawdz poziom krwawienia"
+		if {nccore.working.thirst} is true:
+			send "&2/thirst &4[nowa ilosc] &b- Sprawdz poziom pragnienia"
