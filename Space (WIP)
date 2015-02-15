@@ -1,0 +1,219 @@
+variables:
+	{space.player.tank.oxygen.cap::%player%} = 0
+	{space.player.tank.oxygen.tier::%player%} = 1
+	{space.player.tank.fuel.cap::%player%} = 0
+	{space.player.tank.fuel.tier::%player%} = 1
+	{space.player.planet.now::%player%} = 2
+	{space.player.planet.dest::%player%} = 0
+	{space.player.start.starting::%player%} = false
+	{space.player.start.cd::%player%} = 0
+options:
+	# swiaty
+	earth = world
+	venus = venus
+	mars = mars
+	moon = moon
+	# tagi na czacie
+	tag = &4}&f=SPACE=&4>
+	warn = {@tag} &4&l/!\
+	# pojemnosci zbiornikow
+	tank.cap.1 = 3600 # 1 godzina
+	tank.cap.2 = 7200 # 2 godziny
+	tank.cap.3 = 14400 # 4 godziny
+	tank.cap.4 = 21600 # 6 godzin
+	tank.cap.5 = 43200 # 12 godzin
+
+
+on sign change:
+	if line 1 of sign is "[Reactor]":
+		if block behind event-block is iron block:
+			set line 1 to "&2[Reactor]"
+			set line 2 to "Idle"
+			send "{@tag} Reaktor utworzony pomyslnie"
+		else:
+			send "{@tag} Tabliczka z reaktorem musi byc postawiona na bloku zelaza"
+
+on rightclick on sign:
+	if line 1 of sign is "&2[Reactor]":
+		if block behind event-block is iron block:
+			if line 2 of sign is "Idle":
+				if player is holding green dye of fortune 1 named "&2Uran 235":
+					if player has 4 green dye of fortune 1 named "&2Uran 235":
+						if player has 4 water bucket:
+							send "&2[Reactor] &bRozgzewanie reaktora"
+							remove 4 green dye of fortune 1 named "&2Uran 235" from player
+							remove 4 water bucket from player
+							give 4 bucket to player
+							set line 2 to "&4Grzeje sie"
+							wait 10 seconds
+							set line 2 to "&4Spalanie"
+							wait 2 minutes
+							set line 2 to "&2Chlodzenie"
+							give 30 redstone dust named "&410 RP"
+							wait 1 minute
+							give 2 light green dye of fortune 1 named "&2Pluton"
+							set line 2 to "Idle"
+						else:
+							send "{@warn} &cBrak / za malo przedmiotu ( 4x wiadro wody )"
+					else:
+						send "{@warn} &cZa malo przedmiotu ( 4x Uran 235 )"
+				if player is holding green dye of fortune 1 named "&2Uran 238":	
+					if player has 4 green dye of fortune 1 named "&2Uran 238"
+						if player has 1 green dye of fortune 1 named "&2Uran 235"
+							if player has 4 water bucket:
+								send "&2[Reactor] &bRozgzewanie reaktora"
+								remove 4 green dye of fortune 1 named "&2Uran 238" from player
+								remove green dye of fortune 1 named "&2Uran 235" from player
+								remove 4 water bucket from player
+								give 4 bucket to player
+								set line 2 to "&4Grzeje sie"
+								wait 10 seconds
+								set line 2 to "&4Spalanie"
+								wait 2 minutes
+								set line 2 to "&2Chlodzenie"
+								give 16 redstone dust named "&410 RP"
+								wait 1.5 minutes
+								give light green dye of fortune 1 named "&2Pluton"
+								set line 2 to "Idle"
+							else:
+								send "{@warn} &cBrak / za malo przedmiotu ( 4x wiadro wody )"
+						else:
+							send "{@warn} &cBrak przedmiotu ( Uran 235 )"
+					else:
+						send "{@warn} &cZa malo przedmiotu ( 4x Uran 238 )"
+				if player is holding coal:
+					if player has 2 coal:
+						send "&2[Reactor] &bRozgzewanie reaktora"
+						remove 2 coal from player
+						set line 2 to "&4Grzeje sie"
+						wait 3 seconds
+						set line 2 to "&4Spalanie"
+						wait 20 seconds
+						set line 2 to "&2Chlodzenie"
+						give 1 redstone dust named "&410 RP"
+						wait 2 seconds
+						set line 2 to "Idle"
+					else:
+						send "{@warn} &cZa malo materialu do reakcji"
+				else:
+					send "{@warn} &cBledny material"
+					send "&2Dostepne: &b4x Uran 235 , 4x Uran 238 + Uran 235 , 2x Wegiel kamienny"
+			else:
+				"{@warn} &cReaktor wlasnie dziala. Zaczekaj az sie schlodzi"
+		else:
+			"{@warn} &cReaktor jest niepoprawnie skonfigurowany"
+
+on mine of stone:
+	chance of 2%:
+		give green dye of fortune 1 named "&2Uran 238" to player
+	chance of 0.02%:
+		give green dye of fortune 1 named "&2Uran 235" to player
+
+every minute:
+	add 1 to {space.planet.earth.pos}
+	add 1 to {space.planet.venus.pos}
+	add 1 to {space.planet.mars.pos}
+	add 1 to {space.planet.moon.pos}
+	if {space.planet.earth.pos} == 366:
+		set {space.planet.earth.pos} to 1
+	if {space.planet.venus.pos} == 86:
+		set {space.planet.venus.pos} to 1
+	if {space.planet.moon.pos} == 29:
+		set {space.planet.moon.pos} to 1
+	if {space.planet.mars.pos} == 731:
+		set {space.planet.mars.pos} to 1
+	loop all players:
+		if y-coordinate of loop-player >= 1200:
+			send "{@tag} &aWlasnie wyleciales na orbite. Wpisz &6/journey <planeta>" to loop-player
+			send "&aaby poleciec na dana planete. Jesli nie wybierzesz zadnej planety" to loop-player
+			send "&aprzed osiagnieciem Y = 10 000 polecisz na Ziemie" to loop-player
+
+every second:
+	loop all players:
+		if {space.player.start.starting::%loop-player%} is true:
+			add -1 to {space.player.start.cd::%loop-player%}
+			add -10 to {space.player.tank.fuel.cap::%loop-player%}
+			if {space.player.start.cd::%loop-player%} == 0:
+				push loop-player upward at speed 1.5
+				add -40 to {space.player.tank.fuel.cap::%loop-player%}
+				if y-coordinate of loop-player >= 10000
+					set {space.player.planet.now::%player%} to 2
+					set {space.player.start.starting::%loop-player%} to false
+					wait 10 seconds
+					execute server command "/mvtp {@earth} %loop-player%"
+	loop all players in "{@venus}" or "{@moon}" or "{@mars}":
+		if {space.player.tank.oxygen.cap::%loop-player%} >= 1:
+			add -1 to {space.player.tank.oxygen.cap::%loop-player%}
+		else:
+			damage player by 2 hearts
+
+
+command /space:
+	trigger:
+		if arg 1 is not set:
+			send "&6=======[ {@tag} &bby niccosaint &6]======"
+			send "/start &2- Wystartuj (Wymaga paliwa)"
+			send "/journey <planeta> &2- Lec na planete (Wymaga paliwa)"
+			send "&6&lZbiorniki:"
+			send "&3Tlen: {space.player.tank.oxygen.cap::%player%} / {@tank.cap.%{space.player.tank.oxygen.cap::%player%}%}"
+			send "&ePaliwo: {space.player.fuel.oxygen.cap::%player%} / {@tank.cap.%{space.player.tank.fuel.cap::%player%}%}"
+command /start:
+	trigger:
+		if {space.player.tank.oxygen.cap::%player%} > 1250:
+			if {space.player.tank.fuel.cap::%player%} > 3000:
+				if player has 10 book named "&bCzastka danych":
+					if player has 5 iron blocks:
+						if player has iron block named "&7Silnik":
+							if player has 25 redstone dust named "&410 RP":
+								if player has 4 powered rail named "&dUklad scalony [T4]":
+									if player's account >= 10000:
+										set {space.player.start.starting::%player%} to true
+										set {space.player.start.cd::%player%} to 60
+										send "{@tag} &bZa minute polecisz w kosmos. Na pewno wziales/as wszystko?"
+										send "&bWyjdz na zewnatrz, bo tak bedziesz tylko spalal(a) paliwo."
+									else:
+										send "{@warn} &cZa malo pieniedzy. Wymagane jest &6&l10 000 Cr."
+								else:
+									send "{@warn} &cBrak / za malo przedmiotu ( 4x Uklad scalony [T4] )"
+							else:
+								send "{@warn} &cBrak / za malo przedmiotu ( 250 RP )"
+						else:
+							send "{@warn} &cBrak przedmiotu ( Silnik )"
+					else:
+						send "{@warn} &cBrak / za malo przedmiotu ( 5x Blok zelaza )"
+				else:
+					send "{@warn} &cBrak / za malo przedmiotu ( 10x Czastka danych )"
+			else:
+				send "{@warn} &cBrak / za malo cieczy ( 3000l paliwa )"
+		else:
+			send "{@warn} &cBrak / za malo cieczy ( 1250l tlenu )"
+
+command /journey [<text>]:
+	trigger:
+		if {space.player.start.starting::%player%} is true:
+			if {space.player.start.cd::%player%} == 0:
+				if y-coordinate of player >= 1200:
+					if arg 1 is "venus":
+						if {space.player.planet.now::%player%} is not 1
+							set {space.player.planet.now::%player%} to 1
+							execute server command "/mvtp {@venus} %player%"
+						else:
+							send "{@warn} &cjuz jestes na tej planecie"
+					if arg 1 is "ziemia":
+						if {space.player.planet.now::%player%} is not 2
+							set {space.player.planet.now::%player%} to 2
+							execute server command "/mvtp {@earth} %player%"
+						else:
+							send "{@warn} &cjuz jestes na tej planecie"
+					if arg 1 is "ksiezyc":
+						if {space.player.planet.now::%player%} is not 3
+							set {space.player.planet.now::%player%} to 3
+							execute server command "/mvtp {@moon} %player%"
+						else:
+							send "{@warn} &cjuz jestes na tej planecie"
+					if arg 1 is "mars":
+						if {space.player.planet.now::%player%} is not 4
+							set {space.player.planet.now::%player%} to 4
+							execute server command "/mvtp {@mars} %player%"
+						else:
+							send "{@warn} &cjuz jestes na tej planecie"
