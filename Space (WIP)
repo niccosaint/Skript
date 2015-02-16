@@ -1,42 +1,57 @@
 variables:
 	{space.player.tank.oxygen.cap::%player%} = 0
-	{space.player.tank.oxygen.tier::%player%} = 1
 	{space.player.tank.fuel.cap::%player%} = 0
-	{space.player.tank.fuel.tier::%player%} = 1
 	{space.player.planet.now::%player%} = 2
 	{space.player.planet.dest::%player%} = 0
 	{space.player.start.starting::%player%} = false
 	{space.player.start.cd::%player%} = 0
 options:
 	# swiaty
-	earth = world
-	venus = venus
-	mars = mars
-	moon = moon
+	earth: world
+	venus: venus
+	mars: mars
+	moon: moon
 	# tagi na czacie
-	tag = &4}&f=SPACE=&4>
-	warn = {@tag} &4&l/!\
+	tag: &4}&f=SPACE=&4>
+	warn: &4}&f=SPACE=&4> &4&l/!\
 	# pojemnosci zbiornikow
-	tank.cap.1 = 3600 # 1 godzina
-	tank.cap.2 = 7200 # 2 godziny
-	tank.cap.3 = 14400 # 4 godziny
-	tank.cap.4 = 21600 # 6 godzin
-	tank.cap.5 = 43200 # 12 godzin
-
+	tank.oxygen.cap: 50000
+	tank.fuel.cap: 50000
 
 on sign change:
-	if line 1 of sign is "[Reactor]":
+	if line 1 is "[Reactor]":
 		if block behind event-block is iron block:
 			set line 1 to "&2[Reactor]"
 			set line 2 to "Idle"
 			send "{@tag} Reaktor utworzony pomyslnie"
 		else:
 			send "{@tag} Tabliczka z reaktorem musi byc postawiona na bloku zelaza"
+	if line 1 is "[CPU]":
+		if block behind event-block is diamond block:
+			set line 1 to "&3[CPU]"
+			set line 2 to "Idle"
+			send "{@tag} Procesor utworzony pomyslnie"
+		else:
+			send "{@tag} Tabliczka z procesorem musi byc postawiona na bloku diamentu"
+	if line 1 is "[Extractor]":
+		if block behind event-block is gold block:
+			set line 1 to "&2[Extractor]"
+			set line 2 to "Idle"
+			send "{@tag} Ekstraktor utworzony pomyslnie"
+		else:
+			send "{@tag} Tabliczka z ekstraktorem musi byc postawiona na bloku zlota"
+	if line 1 is "[Interface]":
+		if block behind event-block is redstone block:
+			set line 1 to "&4[Interface]"
+			set line 2 to "Idle"
+			send "{@tag} Interface utworzony pomyslnie"
+		else:
+			send "{@tag} Tabliczka z interface'm musi byc postawiona na bloku redstone"
 
 on rightclick on sign:
-	if line 1 of sign is "&2[Reactor]":
+	if line 1 is "&2[Reactor]":
 		if block behind event-block is iron block:
-			if line 2 of sign is "Idle":
+			if line 2 is "Idle":
 				if player is holding green dye of fortune 1 named "&2Uran 235":
 					if player has 4 green dye of fortune 1 named "&2Uran 235":
 						if player has 4 water bucket:
@@ -49,17 +64,17 @@ on rightclick on sign:
 							set line 2 to "&4Spalanie"
 							wait 2 minutes
 							set line 2 to "&2Chlodzenie"
-							give 30 redstone dust named "&410 RP"
+							give 30 redstone dust named "&410 RP" to player
 							wait 1 minute
-							give 2 light green dye of fortune 1 named "&2Pluton"
+							give 2 light green dye of fortune 1 named "&2Pluton" to player
 							set line 2 to "Idle"
 						else:
 							send "{@warn} &cBrak / za malo przedmiotu ( 4x wiadro wody )"
 					else:
 						send "{@warn} &cZa malo przedmiotu ( 4x Uran 235 )"
 				if player is holding green dye of fortune 1 named "&2Uran 238":	
-					if player has 4 green dye of fortune 1 named "&2Uran 238"
-						if player has 1 green dye of fortune 1 named "&2Uran 235"
+					if player has 4 green dye of fortune 1 named "&2Uran 238":
+						if player has 1 green dye of fortune 1 named "&2Uran 235":
 							if player has 4 water bucket:
 								send "&2[Reactor] &bRozgzewanie reaktora"
 								remove 4 green dye of fortune 1 named "&2Uran 238" from player
@@ -102,6 +117,114 @@ on rightclick on sign:
 				"{@warn} &cReaktor wlasnie dziala. Zaczekaj az sie schlodzi"
 		else:
 			"{@warn} &cReaktor jest niepoprawnie skonfigurowany"
+	if line 1 is "&3[CPU]":
+		if block behind event-block is diamond block:
+			if line 2 is "Idle":
+				if player is holding redstone dust named "&410 RP":
+					if player has 3 redstone dust named "&410 RP":
+						remove 3 redstone dust named "&410 RP" from player
+						set line 2 to "Pracuje"
+						wait 3 seconds
+						give 3 books named "&bCzastka danych"
+						set line 2 to "Idle"
+					else:
+						send "{@warn} &cZa malo materialu do ruszenia ( 30 RP )"
+				else:
+					send "{@warn} &cBledny material"
+					send "&2Dostepne: &b30 RP"
+			else:
+				"{@warn} &cProcesor wlasnie dziala. Zaczekaj az przestanie pracowac"
+		else:
+			"{@warn} &cProcesor jest niepoprawnie skonfigurowany"
+	if line 1 is "&2[Extractor]":
+		if block behind event-block is gold block:
+			if line 2 is "Idle":
+				if player is holding leaves:
+					if player has 2 redstone dust named "&410 RP":
+						if player has 6 leaves:
+							remove 2 redstone dust named "&410 RP" from player
+							remove 6 leaves from player
+							set line 2 to "Pracuje"
+							wait 15 seconds
+							add 250 to {space.player.tank.oxygen.cap::%player%}
+							send "&8>> &2+ 200l &3Tlenu"
+							set line 2 to "Idle"
+						else:
+							send "{@warn} &cBrak / za malo materialu do ruszenia ( 6x liscie )"
+					else:
+						send "{@warn} &cBrak / za malo materialu do ruszenia ( 20 RP )
+				if player is holding lava bucket:
+					if player has 4 redstone dust named "&410 RP":
+						remove 4 redstone dust named "&410 RP" from player
+						remove lava bucket from player
+						give bucket to player
+						set line 2 to "Pracuje"
+						wait 30 seconds
+						add 500 to {space.player.tank.fuel.cap::%player%}
+						send "&8>> &2+ 500l &6Paliwa"
+						set line 2 to "Idle"
+					else:
+						send "{@warn} &cBrak / za malo materialu do ruszenia ( 40 RP )"
+				else:
+					send "{@warn} &cBledny material"
+					send "&2Dostepne: &b4x liscie + 20 RP , Wiadro lawy + 40 RP"
+			else:
+				"{@warn} &cEkstraktor wlasnie dziala. Zaczekaj az przestanie pracowac"
+		else:
+			"{@warn} &cEkstraktor jest niepoprawnie skonfigurowany"
+	if line 1 is "&4[Interface]":
+		if block behind event-block is redstone block:
+			if line 2 is "Idle":
+				if player is holding bucket:
+					if {space.player.tank.fuel.cap::%player%} >= 1000:
+						set line 2 to "Pracuje"
+						add -1000 to {space.player.tank.fuel.cap::%player%}
+						wait 3 seconds
+						send "&8>> &4- 1000l &6Paliwa"
+						remove bucket from player
+						give lava bucket named "&6Paliwo (1000l)"
+						set line 2 to "Idle"
+					else:
+						send "{@warn} &cZa malo cieczy w zbiorniku do ruszenia ( 1000l Paliwa )"
+				if player is holding lava bucket named "&6Paliwo (1000l)":
+					if {space.player.tank.fuel.cap::%player%} <= 49000:
+						remove lava bucket named "&6Paliwo (1000l)" from player
+						give bucket to player
+						set line 2 to "Pracuje"
+						wait 3 seconds
+						send "&8>> &2+ 1000l &6Paliwa"
+						add 1000 to {space.player.tank.fuel.cap::%player%}
+						set line 2 to "Idle"
+				if player is holding glass bootle:
+					if {space.player.tank.fuel.cap::%player%} >= 1000:
+						set line 2 to "Pracuje"
+						add -1000 to {space.player.tank.fuel.cap::%player%}
+						wait 3 seconds
+						send "&8>> &4- 1000l &3Tlenu"
+						remove glass bootle from player
+						give water bootle named "&3Tlen (1000l)"
+						set line 2 to "Idle"
+					else:
+						send "{@warn} &cZa malo cieczy w zbiorniku do ruszenia ( 1000l Tlenu )"
+				if player is holding water bootle named "&3Tlen (1000l)":
+					if {space.player.tank.oxygen.cap::%player%} <= 49000:
+						remove water bootle named "&3Tlen (1000l)" from player
+						give glass bootle to player
+						set line 2 to "Pracuje"
+						wait 3 seconds
+						send "&8>> &2+ 1000l &3Tlenu"
+						add 1000 to {space.player.tank.oxygen.cap::%player%}
+						set line 2 to "Idle"
+				else:
+					send "{@warn} &cBledny material. &2Dostepne:"
+					send "&bpusta butelka + 1000l tlenu ze zbiornika"
+					send "&2butelka tlenu"
+					send "&bpuste wiadro + 1000l paliwa ze zbiornika"
+					send "&2wiadro paliwa"
+			else:
+				"{@warn} &cInterface wlasnie dziala. Zaczekaj az przestanie pracowac"
+		else:
+			"{@warn} &cInterface jest niepoprawnie skonfigurowany"
 
 on mine of stone:
 	chance of 2%:
@@ -114,13 +237,13 @@ every minute:
 	add 1 to {space.planet.venus.pos}
 	add 1 to {space.planet.mars.pos}
 	add 1 to {space.planet.moon.pos}
-	if {space.planet.earth.pos} == 366:
+	if {space.planet.earth.pos} >= 366:
 		set {space.planet.earth.pos} to 1
-	if {space.planet.venus.pos} == 86:
+	if {space.planet.venus.pos} >= 86:
 		set {space.planet.venus.pos} to 1
-	if {space.planet.moon.pos} == 29:
+	if {space.planet.moon.pos} >= 29:
 		set {space.planet.moon.pos} to 1
-	if {space.planet.mars.pos} == 731:
+	if {space.planet.mars.pos} >= 731:
 		set {space.planet.mars.pos} to 1
 	loop all players:
 		if y-coordinate of loop-player >= 1200:
@@ -136,7 +259,7 @@ every second:
 			if {space.player.start.cd::%loop-player%} == 0:
 				push loop-player upward at speed 1.5
 				add -40 to {space.player.tank.fuel.cap::%loop-player%}
-				if y-coordinate of loop-player >= 10000
+				if y-coordinate of loop-player >= 10000:
 					set {space.player.planet.now::%player%} to 2
 					set {space.player.start.starting::%loop-player%} to false
 					wait 10 seconds
@@ -147,16 +270,16 @@ every second:
 		else:
 			damage player by 2 hearts
 
-
 command /space:
 	trigger:
 		if arg 1 is not set:
 			send "&6=======[ {@tag} &bby niccosaint &6]======"
 			send "/start &2- Wystartuj (Wymaga paliwa)"
-			send "/journey <planeta> &2- Lec na planete (Wymaga paliwa)"
+			send "/journey <planeta> &2- Lec na planete"
 			send "&6&lZbiorniki:"
-			send "&3Tlen: {space.player.tank.oxygen.cap::%player%} / {@tank.cap.%{space.player.tank.oxygen.cap::%player%}%}"
-			send "&ePaliwo: {space.player.fuel.oxygen.cap::%player%} / {@tank.cap.%{space.player.tank.fuel.cap::%player%}%}"
+			send "&3Tlen: {space.player.tank.oxygen.cap::%player%} / {@tank.oxygen.cap}"
+			send "&ePaliwo: {space.player.fuel.oxygen.cap::%player%} / {@tank.fuel.cap}"
+
 command /start:
 	trigger:
 		if {space.player.tank.oxygen.cap::%player%} > 1250:
@@ -194,25 +317,25 @@ command /journey [<text>]:
 			if {space.player.start.cd::%player%} == 0:
 				if y-coordinate of player >= 1200:
 					if arg 1 is "venus":
-						if {space.player.planet.now::%player%} is not 1
+						if {space.player.planet.now::%player%} is not 1:
 							set {space.player.planet.now::%player%} to 1
 							execute server command "/mvtp {@venus} %player%"
 						else:
 							send "{@warn} &cjuz jestes na tej planecie"
 					if arg 1 is "ziemia":
-						if {space.player.planet.now::%player%} is not 2
+						if {space.player.planet.now::%player%} is not 2:
 							set {space.player.planet.now::%player%} to 2
 							execute server command "/mvtp {@earth} %player%"
 						else:
 							send "{@warn} &cjuz jestes na tej planecie"
 					if arg 1 is "ksiezyc":
-						if {space.player.planet.now::%player%} is not 3
+						if {space.player.planet.now::%player%} is not 3:
 							set {space.player.planet.now::%player%} to 3
 							execute server command "/mvtp {@moon} %player%"
 						else:
 							send "{@warn} &cjuz jestes na tej planecie"
 					if arg 1 is "mars":
-						if {space.player.planet.now::%player%} is not 4
+						if {space.player.planet.now::%player%} is not 4:
 							set {space.player.planet.now::%player%} to 4
 							execute server command "/mvtp {@mars} %player%"
 						else:
