@@ -214,9 +214,10 @@ command /trader [<text>] [<text>]:
 					send "&cBLAD: Brak towaru na sprzedaz"
 
 		if arg 1 is "reset":
-			send "&6Resetowanie"
-			set {handel.sell::*} to 0
-			set {handel.buy::*} to 0
-			set {handel.trans::*} to 0
-			set {handel.demand::*} to 0
-			send "&aZakonczono!"
+			if sender is console:
+				send "&6Resetowanie"
+				set {handel.sell::*} to 0
+				set {handel.buy::*} to 0
+				set {handel.trans::*} to 0
+				set {handel.demand::*} to 0
+				send "&aZakonczono!"
