@@ -1,9 +1,14 @@
+# =============
+# ncHandel by niccosaint
+# wersja 1.0
+# =============
 options:
 	base.iron: 6000
 	base.gold: 8000
 	base.diamond: 18000
 	base.wool: 2500
 	base.obsidian: 7500
+	stack.size: 8 #Na ile dzielony jest stack? (czesc trzeba ustawic recznie) [1=64 szt. , 2=32 szt. , 4=16 szt. itd.]
 	update: 15
 	minmulti: 0.3
 	maxmulti: 3
@@ -62,13 +67,13 @@ every {@update} seconds:
 command /trader [<text>] [<text>]:
 	trigger:
 		if arg 1 is not set:
-			send "&6&lHandel &cby niccosaint"
+			send "&6&lncHandel &cby niccosaint"
 			send "&bDostepne komendy:"
 			send "&2/trader list &3- Wyswietl ceny surowcow"
 			send "&2/trader buy <surowiec> <ilosc> &3- Kup surowiec po aktualnej cenie"
 			send "&2/trader sell <surowiec> <ilosc> &3- Sprzedaj surowiec po aktualnej cenie"
 		if arg 1 is "list":
-			send "&6&lHandel &cby niccosaint"
+			send "&6&lncHandel &cby niccosaint"
 			send "&7&lZelazo:"
 			send "&6Sprzedano: &a%{handel.sell::iron}%   &6Kupiono: &c%{handel.buy::iron}%"   
 			send "&3Transakcje: &b%{handel.trans::iron}%   &9Popyt: &a%{handel.demand::iron}%"
@@ -91,7 +96,7 @@ command /trader [<text>] [<text>]:
 			send "&e&lCena: &a&l%{handel.price::obsidian}% &eCr./stack"
 		if arg 1 is "buy":
 			if arg 2 is "iron":
-				set {_cost.%player%} to {handel.price::iron}/8
+				set {_cost.%player%} to {handel.price::iron}/{@stack.size}
 				if player's balance >= {_cost.%player%}:
 					if player can hold 8 iron ingots:
 						remove {_cost.%player%} from player's balance
@@ -104,7 +109,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Za malo funduszy"
 			if arg 2 is "gold":
-				set {_cost.%player%} to {handel.price::gold}/8
+				set {_cost.%player%} to {handel.price::gold}/{@stack.size}
 				if player's balance >= {_cost.%player%}:
 					if player can hold 8 gold ingots:
 						remove {_cost.%player%} from player's balance
@@ -117,7 +122,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Za malo funduszy"
 			if arg 2 is "diamond":
-				set {_cost.%player%} to {handel.price::diamond}/8
+				set {_cost.%player%} to {handel.price::diamond}/{@stack.size}
 				if player's balance >= {_cost.%player%}:
 					if player can hold 8 diamonds:
 						remove {_cost.%player%} from player's balance
@@ -130,7 +135,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Za malo funduszy"
 			if arg 2 is "obsidian":
-				set {_cost.%player%} to {handel.price::obsidian}/8
+				set {_cost.%player%} to {handel.price::obsidian}/{@stack.size}
 				if player's balance >= {_cost.%player%}:
 					if player can hold 8 obsidian:
 						remove {_cost.%player%} from player's balance
@@ -143,7 +148,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Za malo funduszy"
 			if arg 2 is "wool":
-				set {_cost.%player%} to {handel.price::wool}/8
+				set {_cost.%player%} to {handel.price::wool}/{@stack.size}
 				if player's balance >= {_cost.%player%}:
 					if player can hold 8 white wool:
 						remove {_cost.%player%} from player's balance
@@ -158,7 +163,7 @@ command /trader [<text>] [<text>]:
 
 		if arg 1 is "sell":
 			if arg 2 is "iron":
-				set {_cost.%player%} to {handel.price::iron}/8
+				set {_cost.%player%} to {handel.price::iron}/{@stack.size}
 				if player has 8 iron ingots:
 					add {_cost.%player%} to player's balance
 					remove 8 iron ingots from player
@@ -168,7 +173,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Brak towaru na sprzedaz"
 			if arg 2 is "wool":
-				set {_cost.%player%} to {handel.price::wool}/8
+				set {_cost.%player%} to {handel.price::wool}/{@stack.size}
 				if player has 8 white wool:
 					add {_cost.%player%} to player's balance
 					remove 8 white wool from player
@@ -178,7 +183,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Brak towaru na sprzedaz"
 			if arg 2 is "obsidian":
-				set {_cost.%player%} to {handel.price::obsidian}/8
+				set {_cost.%player%} to {handel.price::obsidian}/{@stack.size}
 				if player has 8 obsidian:
 					add {_cost.%player%} to player's balance
 					remove 8 obsidian from player
@@ -188,7 +193,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Brak towaru na sprzedaz"
 			if arg 2 is "diamond":
-				set {_cost.%player%} to {handel.price::diamond}/8
+				set {_cost.%player%} to {handel.price::diamond}/{@stack.size}
 				if player has 8 diamonds:
 					add {_cost.%player%} to player's balance
 					remove 8 diamonds from player
@@ -198,7 +203,7 @@ command /trader [<text>] [<text>]:
 				else:
 					send "&cBLAD: Brak towaru na sprzedaz"
 			if arg 2 is "gold":
-				set {_cost.%player%} to {handel.price::gold}/8
+				set {_cost.%player%} to {handel.price::gold}/{@stack.size}
 				if player has 8 gold ingots:
 					add {_cost.%player%} to player's balance
 					remove 8 gold ingots from player
