@@ -1,0 +1,143 @@
+aliases:
+	raw salmon = 349:1
+	cooked salmon = 350:1
+	soup = 282
+on join:
+	if {ncdiet.water::%player%} is not set:
+		set {ncdiet.water::%player%} to 100
+	if {ncdiet.vit::%player%} is not set:
+		set {ncdiet.vit::%player%} to 50
+	if {ncdiet.fat::%player%} is not set:
+		set {ncdiet.fat::%player%} to 50
+	if {ncdiet.sug::%player%} is not set:
+		set {ncdiet.sug::%player%} to 50
+	if {ncdiet.carb::%player%} is not set:
+		set {ncdiet.carb::%player%} to 50
+	if {ncdiet.prot::%player%} is not set:
+		set {ncdiet.prot::%player%} to 50
+
+every minecraft hour:
+	loop all players:
+		add -1.5 to {ncdiet.water::%loop-player%}
+		if {ncdiet.water::%loop-player%} < 30:
+			apply nausea to loop-player for 20 seconds
+			if {ncdiet.water::%loop-player%} < 10:
+				apply blindness to loop-player for 10 seconds
+				apply damage to loop-player for 1 second
+		if {ncdiet.water::%loop-player%} > 100:
+			set {ncdiet.water::%loop-player%} to 100
+		add -0.7 to {ncdiet.vit::%loop-player%}
+		if {ncdiet.vit::%loop-player%} < 20:
+			apply poison to loop-player for 5 seconds
+		if {ncdiet.vit::%loop-player%} > 100:
+			set {ncdiet.vit::%loop-player%} to 100
+		add -0.3 to {ncdiet.fat::%loop-player%}
+		if {ncdiet.fat::%loop-player%} < 20:
+			apply weakness to loop-player for 5 seconds
+		if {ncdiet.fat::%loop-player%} > 80:
+			apply slowness 2 to loop-player for 40 seconds
+			if {ncdiet.fat::%loop-player%} > 100:
+				set {ncdiet.fat::%loop-player%} to 100
+		add -0.9 to {ncdiet.sug::%loop-player%}
+		if {ncdiet.sug::%loop-player%} < 25:
+			apply weakness to loop-player for 5 seconds
+			apply slowness 2 to loop-player for 20 seconds
+		if {ncdiet.sug::%loop-player%} > 75:
+			apply speed 2 to loop-player for 10 seconds
+			apply weakness to loop-player for 10 seconds
+			if {ncdiet.sug::%loop-player%} > 100:
+				set {ncdiet.sug::%loop-player%} to 100
+		add -1.2 to {ncdiet.carb::%loop-player%}
+		if {ncdiet.carb::%loop-player%} < 35:
+			apply weakness to loop-player for 10 seconds
+			apply slowness to loop-player for 2 seconds
+		if {ncdiet.carb::%loop-player%} > 100:
+			set {ncdiet.carb::%loop-player%} to 100
+		add -0.8 to {ncdiet.prot::%loop-player%}
+		if {ncdiet.prot::%loop-player%} < 20:
+			apply weakness to loop-player for 5 seconds
+			apply slowness to loop-player for 5 seconds
+		if {ncdiet.sug::%loop-player%} > 100:
+			set {ncdiet.prot::%loop-player%} to 100
+			apply nausea to loop-player for 10 seconds
+	
+on consume:
+	if player's tool is water bottle:
+		add 5 to {ncdiet.water::%player%}
+	if player's tool is raw beef, raw porkchop, raw chicken, raw fish or raw salmon:
+		add 0.3 to {ncdiet.vit::%player%}
+		add 1 to {ncdiet.fat::%player%}
+		add 1.2 to {ncdiet.carb::%player%}
+		add 0.1 to {ncdiet.water::%player%}
+		add 1.1 to {ncdiet.prot::%player%}
+		chance of 20%:
+			apply poison to player for 20 seconds
+			send "&cOtrules sie! Nastepnym razem jedz ugotowane mieso!"
+	if player's tool is cooked beef, cooked porkchop, cooked chicken, cooked fish or cooked salmon:
+		add 0.4 to {ncdiet.vit::%player%}
+		add 0.9 to {ncdiet.fat::%player%}
+		add 1.4 to {ncdiet.carb::%player%}
+		add 0.1 to {ncdiet.water::%player%}
+		add 1 to {ncdiet.prot::%player%}
+	if player's tool is cookie:
+		add 0.8 to {ncdiet.sug::%player%}
+		add 0.3 to {ncdiet.carb::%player%}
+	if player's tool is pumpkin pie:
+		add 2.1 to {ncdiet.sug::%player%}
+		add 1.1 to {ncdiet.carb::%player%}
+		add 0.2 to {ncdiet.water::%player%}
+	if player's tool is potato:
+		add 0.5 to {ncdiet.vit::%player%}
+		add 0.2 to {ncdiet.fat::%player%}
+		add 1 to {ncdiet.carb::%player%}
+		add 0.2 to {ncdiet.water::%player%}
+		add 0.7 to {ncdiet.prot::%player%}
+		chance of 15%:
+			apply poison to player for 20 seconds
+			send "&cOtrules sie! Nastepnym razem jedz ugotowane ziemniaki!"
+	if player's tool is baked potato:
+		add 0.3 to {ncdiet.vit::%player%}
+		add 0.2 to {ncdiet.fat::%player%}
+		add 1.1 to {ncdiet.carb::%player%}
+		add 0.1 to {ncdiet.water::%player%}
+		add 0.6 to {ncdiet.prot::%player%}
+	if player's tool is carrot:
+		add 1.1 to {ncdiet.vit::%player%}
+		add 0.5 to {ncdiet.water::%player%}
+	if player's tool is melon slice:
+		add 0.6 to {ncdiet.vit::%player%}
+		add 1.5 to {ncdiet.water::%player%}
+	if player's tool is bread:
+		add 0.2 to {ncdiet.vit::%player%}
+		add 1.1 to {ncdiet.carb::%player%}
+		add 0.2 to {ncdiet.prot::%player%}
+	if player's tool is soup:
+		add 0.7 to {ncdiet.vit::%player%}
+		add 0.1 to {ncdiet.fat::%player%}
+		add 0.7 to {ncdiet.carb::%player%}
+		add 1.3 to {ncdiet.water::%player%}
+		add 0.4 to {ncdiet.prot::%player%}
+	if player's tool is golden apple, enchanted golden apple or golden carrot:
+		set {ncdiet.water::%player%} to 100
+		set {ncdiet.vit::%player%} to 50
+		set {ncdiet.fat::%player%} to 50
+		set {ncdiet.sug::%player%} to 50
+		set {ncdiet.carb::%player%} to 50
+		set {ncdiet.prot::%player%} to 50
+
+command /diet [<text>]:
+	trigger:
+		if arg 1 is not set:
+			send "&a==========[ &2&lncDiet by niccosaint &a]============="
+			send "&3/diet stat &d- Poziom twojej diety"
+			send "&3/diet drug &d- Nie jestes uzalezniony?"
+		if arg 1 is "stat":
+			send "&a==========[ &2&lncDiet by niccosaint &a]============="
+			send "&bNawodnienie: %{ncdiet.water::%player%}%%% &d(>30%%)"
+			send "&aWitaminy: %{ncdiet.vit::%player%}%%% &d(>20%%)"
+			send "&6Tluszcze: %{ncdiet.fat::%player%}%%% &d(20 ~ 80%%)"
+			send "&fGlukoza: %{ncdiet.sug::%player%}%%% &d(25 ~ 75%%)"
+			send "&cWeglowodany: %{ncdiet.carb::%player%}%%% &d(>35%%)"
+			send "&eBialko: %{ncdiet.prot::%player%}%%% &d(>20%%)"
+		if arg 1 is "drug":
+			send "&2&lncDiet    &7&lWkrotce!"
