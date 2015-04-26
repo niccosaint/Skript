@@ -159,7 +159,7 @@ command /bitpay [<text>] [<integer>]:
 command /bittransfer [<text>] [<text>] [<integer>]:
 	trigger:
 		if {ncos.enable::economy} is true:
-			if sender has permission "ncos.btctransfer":
+			if sender has permission "ncos.bittransfer":
 				if arg 1 is set:
 					if arg 2 is set:
 						if arg 3 is set:
