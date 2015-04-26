@@ -1,0 +1,398 @@
+options:
+	tag: &7[&3&lnc&6&lOS&7] #Wyglad prefixu
+	vault: true #Uzycie pluginu Vault: Jeśli nie korzystasz z Essentials/iConomy itp. ustaw na false
+
+command /stat [<text>]:
+	trigger:
+		if arg 1 is not set:
+			send "{@tag} &aStan konta (Ty)"
+			if {ncos.bits.kilo::%sender%} < 10:
+				if {ncos.bits.bit::%sender%} < 1000:
+					if {ncos.bits.bit::%sender%} < 100:
+						if {ncos.bits.bit::%sender%} < 10:
+							send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.0%{ncos.bits.kilo::%sender%}%&6000%{ncos.bits.bit::%sender%}%&6&l฿"
+						else:
+							send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.0%{ncos.bits.kilo::%sender%}%&600%{ncos.bits.bit::%sender%}%&6&l฿"
+					else:
+						send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.0%{ncos.bits.kilo::%sender%}%&60%{ncos.bits.bit::%sender%}%&6&l฿"
+				else:
+					send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.0%{ncos.bits.kilo::%sender%}%&6%{ncos.bits.bit::%sender%}%&6&l฿"
+			else:
+				if {ncos.bits.bit::%sender%} < 1000:
+					if {ncos.bits.bit::%sender%} < 100:
+						if {ncos.bits.bit::%sender%} < 10:
+							send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.%{ncos.bits.kilo::%sender%}%&6000%{ncos.bits.bit::%sender%}%&6&l฿"
+						else:
+							send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.%{ncos.bits.kilo::%sender%}%&600%{ncos.bits.bit::%sender%}%&6&l฿"
+					else:
+						send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.%{ncos.bits.kilo::%sender%}%&60%{ncos.bits.bit::%sender%}%&6&l฿"
+				else:
+					send "{@tag} &aBity: &6&l%{ncos.bits.mega::%sender%}%.%{ncos.bits.kilo::%sender%}%&6%{ncos.bits.bit::%sender%}%&6&l฿"
+			send "&a&lGemy: &2&l%{ncos.gem::%sender%}%"
+		else:
+			if sender has permission "ncos.viewothers" or "ncos.admin":
+				send "{@tag} &aStan konta (%arg 1%)"
+				if {ncos.bits.kilo::%arg 1%} < 10:
+					if {ncos.bits.bit::%arg 1%} < 1000:
+						if {ncos.bits.bit::%arg 1%} < 100:
+							if {ncos.bits.bit::%arg 1%} < 10:
+								send "&{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.0%{ncos.bits.kilo::%arg 1%}%&6000%{ncos.bits.bit::%arg 1%}%&6&l฿"
+							else:
+								send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.0%{ncos.bits.kilo::%arg 1%}%&600%{ncos.bits.bit::%arg 1%}%&6&l฿"
+						else:
+							send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.0%{ncos.bits.kilo::%arg 1%}%&60%{ncos.bits.bit::%arg 1%}%&6&l฿"
+					else:
+						send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.0%{ncos.bits.kilo::%arg 1%}%&6%{ncos.bits.bit::%arg 1%}%&6&l฿"
+				else:
+					if {ncos.bits.bit::%arg 1%} < 1000:
+						if {ncos.bits.bit::%arg 1%} < 100:
+							if {ncos.bits.bit::%arg 1%} < 10:
+								send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.%{ncos.bits.kilo::%arg 1%}%&6000%{ncos.bits.bit::%arg 1%}%&6&l฿"
+							else:
+								send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.%{ncos.bits.kilo::%arg 1%}%&600%{ncos.bits.bit::%arg 1%}%&6&l฿"
+						else:
+							send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.%{ncos.bits.kilo::%arg 1%}%&60%{ncos.bits.bit::%arg 1%}%&6&l฿"
+					else:
+						send "{@tag} &aBity: &6&l%{ncos.bits.mega::%arg 1%}%.%{ncos.bits.kilo::%arg 1%}%&6%{ncos.bits.bit::%arg 1%}%&6&l฿"
+				send "&a&lGemy: &2&l%{ncos.gem::%arg 1%}%"
+			else:
+				send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+
+command /bitreset <text>:
+	trigger:
+		if sender has permission "ncos.resetbal" or "ncos.admin":
+			set {ncos.bits.bit::%arg 1%} to 0
+			set {ncos.bits.kilo::%arg 1%} to 0
+			set {ncos.bits.mega::%arg 1%} to 0
+			send "{@tag} Konto wyzerowane"
+		else:
+			send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+
+on unload:
+	set {ncos.enable::*} to false
+	send "{@tag} &cSystem wylaczony" to console
+	send "{@tag} zostal wylaczony. Wiekszosc interakcji jest niedostepna" to all players
+
+on load:
+	wait 5 seconds
+	send "{@tag} Enabling system" to console
+	send "{@tag} S1 >> ncos executeFile(\startup.nc) -a" to console
+	send "S* > ncos.enableAPI(Skript)" to console
+	wait 6 ticks
+	send "S* < &2Done!" to console
+	send "S* > ncos.enableAPI(SkQuery)" to console
+	wait 2 seconds
+	send "S* < &2Done!" to console
+	send "S* > ncos.enableAPI(WildSkript)" to console
+	wait 1.5 seconds
+	send "S* < &2Done!" to console
+	set {ncos.enable::system} to true
+	send "{@tag} S2 >> ncos executeFile(\modules\eco.nc)" to console
+	send "{@tag} S3 >> ncos executeFile(\modules\chat.nc)" to console
+	send "{@tag} S4 >> ncos executeFile(\modules\inter.nc)" to console
+	wait 2 ticks
+	send "S2 > ncos.eco.readDB(\db\eco.ncdb)" to console
+	send "S3 > ncos.openChat(p)" to console
+	send "S4 > ncos.listInters()" to console
+	wait 2 ticks
+	set {ncos.enable::communication} to true
+	send "S3 < &2Done!" to console
+	send "S4 < &2Done!" to console
+	send "S4 > ncos.EnableInter(*)" to console
+	wait 8 ticks
+	send "S2 < &2Done!" to console
+	set {ncos.enable::economy} to true
+	wait 3 seconds
+	set {ncos.enable::interaction} to true
+	send "S4 < &2Done!" to console
+	send "{@tag} S1 >> ncos executeFile(\pl_PL.lang) -a" to console
+	send "S* > ncos.readlang(pl_PL)" to console
+	wait 6 ticks
+	send "S* < &2Done!" to console
+	send "{@tag} &aUkonczono wlaczanie systemu ncOS" to console
+
+
+every tick:
+	if {ncos.enable::economy} is true:
+		loop all players:
+			if {ncos.bits.bit::%loop-player%} >= 10000:
+				add -10000 to {ncos.bits.bit::%loop-player%}
+				add 1 to {ncos.bits.kilo::%loop-player%}
+			else if {ncos.bits.bit::%loop-player%} < 0:
+				add -1 to {ncos.bits.kilo::%loop-player%}
+				add 10000 to {ncos.bits.bit::%loop-player%}
+			if {ncos.bits.kilo::%loop-player%} >= 100:
+				add -100 to {ncos.bits.kilo::%loop-player%}
+				add 1 to {ncos.bits.mega::%loop-player%}
+			else if {ncos.bits.kilo::%loop-player%} < 0:
+				add -1 to {ncos.bits.mega::%loop-player%}
+				add 100 to {ncos.bits.kilo::%loop-player%}
+every second:
+	loop all players:
+		if {ncos.enable::system} is false:
+			if loop-player has permission "ncos.bypass" or "ncos.admin":
+				stop
+			else:
+				kick loop-player due to "{@tag} jest wylaczony. Wejdz ponownie po restarcie systemu"
+
+
+command /bitpay [<text>] [<integer>]:
+	trigger:
+		if {ncos.enable::economy} is true:
+			if arg 1 is set:
+				if arg 2 is set:
+					set {_ncos.bits.bal::%sender%} to ({ncos.bits.mega::%sender%}*1000000)+({ncos.bits.kilo::%sender%}*10000)+{ncos.bits.bit::%sender%}
+					if {_ncos.bits.bal::%sender%} >= arg 2:
+						set {_ncos.bits.pay::%sender%} to 0-arg 2
+						add {_ncos.bits.pay::%sender%} to {ncos.bits.bit::%sender%}
+						add arg 2 to {ncos.bits.bit::%arg 1%}
+						send "{@tag} &aPaid &2%arg 2% bits to %arg 1%"
+					else:
+						send "{@tag} &cODMOWA DOSTEPU - Brak funduszy"
+				else:
+					send "{@tag} &cUzycie: &7/btcpay <gracz> <kwota>"
+			else:
+				send "{@tag} &cUzycie: &7/btcpay <gracz> <kwota>"
+		else:
+			send "{@tag} &cSystem ekonomii wylaczony"
+
+command /bittransfer [<text>] [<text>] [<integer>]:
+	trigger:
+		if {ncos.enable::economy} is true:
+			if sender has permission "ncos.btctransfer":
+				if arg 1 is set:
+					if arg 2 is set:
+						if arg 3 is set:
+							set {_ncos.bits.bal::%arg 1%} to ({ncos.bits.mega::%arg 1%}*1000000)+({ncos.bits.kilo::%arg 1%}*10000)+{ncos.bits.bit::%arg 1%}
+							if {_ncos.bits.bal::%arg 1%} >= arg 3:
+								set {_ncos.bits.pay::%arg 1%} to 0-arg 3
+								add {_ncos.bits.pay::%arg 1%} to {ncos.bits.bit::%arg 1%}
+								add arg 3 to {ncos.bits.bit::%arg 2%}
+								send "{@tag} &aPaid for %arg 1% &2%arg 3% bits to %arg 2%"
+							else:
+								send "{@tag} &cODMOWA DOSTEPU - Brak funduszy"
+						else:
+							send "{@tag} &cUzycie: &7/btctransfer <gracz> <gracz> <kwota>"
+					else:
+						send "{@tag} &cUzycie: &7/btctransfer <gracz> <gracz> <kwota>"
+				else:
+					send "{@tag} &cUzycie: &7/btctransfer <gracz> <gracz> <kwota>"
+			else:
+				send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+		else:
+			send "{@tag} &cSystem ekonomii wylaczony"
+
+command /hash <text> [<integer>]:
+	trigger:
+		if sender has permission "ncos.hash":
+			if arg 2 is not set:
+				set {_ncos.hash::%player%} to hashed arg 1
+				send "&6Hash: &a%{_ncos.hash::%player%}%"
+			else:
+				set {_ncos.hash.count::%player%} to arg 2-1
+				set {_ncos.hash::%player%} to hashed arg 1
+				loop {_ncos.hash.count::%player%} times:
+					set {_ncos.hash::%player%} to hashed {_ncos.hash::%player%}
+				send "&6Hash (%arg 2%x): &a%{_ncos.hash::%player%}%"
+		else:
+			send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+
+on command "/bal", "/balance" or "/money":
+	if {@vault} is false:
+		cancel event
+		execute player command "stat"
+on command "/pl" or "plugins":
+	if player has permission "ncos.plugin":
+		stop
+	else:
+		cancel event
+		send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+
+
+command /gemreedem <player> <integer> <text>:
+	trigger:
+		if sender has permission "ncos.gemreedem" or "ncos.admin":
+			if {ncos.gem::%arg 1%} >= arg 2:
+				set {_ncos.redeem::%arg 1%} to 0-arg 2
+				add {_ncos.redeem::%arg 1%} to {ncos.gem::%arg 1%}
+				execute server command "%arg 3%"
+			else:
+				send "{@tag} &cODMOWA DOSTEPU - Brak funduszy" to arg 1
+		else:
+			send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+
+command /bitmod <text> <integer>:
+	trigger:
+		if sender has permission "ncos.bitmod":
+			if {ncos.enable::economy} is true:
+				if arg 2 < 0:
+					set {_ncos.bits.bal::%arg 1%} to ({ncos.bits.mega::%arg 1%}*1000000)+({ncos.bits.kilo::%arg 1%}*10000)+{ncos.bits.bit::%arg 1%}
+					if {_ncos.bits.bal::%arg 1%} >= arg 2:
+						add arg 2 to {ncos.bits.bit::%arg 1%}
+						send "&2%arg 2% &6bitow wzieto od &a%arg 1%"
+					else:
+						send "{@tag} &cODMOWA DOSTEPU - Brak funduszy"
+				else:
+					add arg 2 to {ncos.bits.bit::%arg 1%}
+					send "&2%arg 2% &6bitow dano &a%arg 1%"
+			else:
+				send "{@tag} &cSystem ekonomii wylaczony"
+		else:
+			send "{@tag} &cODMOWA DOSTEPU - Brak uprawnien"
+
+
+every 5 seconds:
+	loop all players:
+		display board named "{@tag}" to loop-player
+		make score "&6&lBity" in board of loop-player to 6
+		make score "&6mikroBity" in board of loop-player to 4
+		make score "&a%{ncos.bits.bit::%loop-player%}%" in board of loop-player to 3
+		make score "&7" in board of loop-player to 2
+		make score "&a&lGemy:" in board of loop-player to 1
+		make score "&b&l%{ncos.gem::%loop-player%}%" in board of loop-player to 0
+		move display of loop-player to sidebar
+		if {ncos.bits.kilo::%loop-player%} < 10:
+			make score "&a&l%{ncos.bits.mega::%loop-player%}%.0%{ncos.bits.kilo::%loop-player%}%" in board of loop-player to 5
+		else:
+			make score "&a&l%{ncos.bits.mega::%loop-player%}%.%{ncos.bits.kilo::%loop-player%}%" in board of loop-player to 5
+
+command /ncos [<text>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			send "&6============= {@tag} &b&lby niccosaint &6============="
+			send "&2/stat &3- Sprawdz swoje bity"
+			send "&2/bitpay <player> <amount> &3- Zaplac"
+			send "&4/ncos admin &c- Komendy administracyjne"
+		if arg 1 is "admin":
+			if player has permission "ncos.list" or "ncos.admin":
+				send "&c============= {@tag} &4&lby niccosaint &c============="
+				send "&a/ncos disable <modul> &3- Wylacz modul(y)"
+				send "&a/ncos enable <modul> &3- Wylacz modul(y)"
+				send "&a/hash <tekst> [ilosc] &3- Zaszyfruj tekst"
+				send "&a/bitreset <gracz> &3- Wyzeruj konto gracza"
+				send "&a/bittransfer <gracz> <gracz> <kwota> &3- Wymuszona platnosc"
+				send "&a/ncos modules &3- Pokaz moduly"
+			else:
+				send "{@tag} &cACCESS DENIED - Lack of permissions"
+		if arg 1 is "modules":
+			if player has permission "ncos.modules" or "ncos.admin":
+				send "&c============= {@tag} &4&lby niccosaint &c============="
+				if {ncos.enable::system} is true:
+					send "&3System - &2ON"
+				else:
+					send "&3System - &4OFF"
+				if {ncos.enable::communication} is true:
+					send "&3Kommunikacja - &2ON"
+				else:
+					send "&3Kommunikacja - &4OFF"
+				if {ncos.enable::economy} is true:
+					send "&3Ekonomia - &2ON"
+				else:
+					send "&3Ekonomia - &4OFF"
+				if {ncos.enable::interaction} is true:
+					send "&3Interakcja - &2ON"
+				else:
+					send "&3Interakcja - &4OFF"
+		if arg 1 is "disable":
+			if player has permission "ncos.modules" or "ncos.admin":
+				if arg 2 is "system":
+					if {ncos.enable::system} is true:
+						send "{@tag} Disabling system"
+						set {ncos.enable::*} to false
+						send "{@tag} System disabled"
+					else:
+						send "{@tag} System already disabled"
+				if arg 2 is "communications":
+					if {ncos.enable::communication} is true:
+						send "{@tag} Disabling system"
+						set {ncos.enable::communication} to false
+						send "{@tag} Communications system disabled"
+					else:
+						send "{@tag} System already disabled"
+				if arg 2 is "interaction":
+					if {ncos.enable::interaction} is true:
+						send "{@tag} Disabling system"
+						set {ncos.enable::interaction} to false
+						send "{@tag} Interaction system disabled"
+					else:
+						send "{@tag} System already disabled"
+				if arg 2 is "economy":
+					if {ncos.enable::economy} is true:
+						send "{@tag} Disabling system"
+						set {ncos.enable::economy} to false
+						send "{@tag} Economy system disabled"
+					else:
+						send "{@tag} System already disabled"
+		if arg 1 is "enable":
+			if player has permission "ncos.modules" or "ncos.admin":
+				if arg 2 is "system":
+					if {ncos.enable::system} is false:
+						send "{@tag} Enabling system..."
+						execute server command "/sk reload %script%"
+					else:
+						send "{@tag} System already disabled"
+				if arg 2 is "communications":
+					if {ncos.enable::system} is true:
+						if {ncos.enable::communication} is false:
+							send "{@tag} Enabling system"
+							wait 4 ticks
+							set {ncos.enable::communication} to true
+							send "{@tag} Communication system enabled"
+						else:
+							send "{@tag} System already enabled"
+					else:
+						send "{@tag} Enable system first"
+				if arg 2 is "interaction":
+					if {ncos.enable::system} is true:
+						if {ncos.enable::interaction} is false:
+							send "{@tag} Enabling system"
+							wait 3.6 seconds
+							set {ncos.enable::interaction} to true
+							send "{@tag} Interaction system enabled"
+						else:
+							send "{@tag} System already enabled"
+					else:
+						send "{@tag} Enable system first"
+				if arg 2 is "economy":
+					if {ncos.enable::system} is true:
+						if {ncos.enable::economy} is false:
+							send "{@tag} Enabling system"
+							wait 0.5 seconds
+							set {ncos.enable::economy} to true
+							send "{@tag} Economy system enabled"
+						else:
+							send "{@tag} System already enabled"
+					else:
+						send "{@tag} Enable system first"
+
+on chat:
+	if {ncos.enable::communication} is true:
+		stop
+	else:
+		cancel event
+		send "{@tag} &cSystem komunikacji wylaczony"
+on command:
+	if {ncos.enable::communication} is false:
+		if command is not "/ncos":
+			send "{@tag} &cSystem komunikacji i/lub interakcji wylaczony"
+on click:
+	if {ncos.enable::interaction} is true:
+		stop
+	else:
+		cancel event
+		send "{@tag} &cSystem interakcji wylaczony"
+on block physics:
+	if {ncos.enable::interaction} is true:
+		stop
+	else:
+		cancel event
+on damage:
+	if {ncos.enable::interaction} is true:
+		stop
+	else:
+		cancel event
+on explosion prime:
+	if {ncos.enable::interaction} is true:
+		stop
+	else:
+		cancel event
