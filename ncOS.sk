@@ -186,8 +186,7 @@ command /hash <text> [<integer>]:
 	trigger:
 		if sender has permission "ncos.hash":
 			if arg 2 is not set:
-				set {_ncos.hash::%player%} to hashed arg 1
-				send "&6Hash: &a%{_ncos.hash::%player%}%"
+				send "&6Hash: &a%hashed arg 1%"
 			else:
 				set {_ncos.hash.count::%player%} to arg 2-1
 				set {_ncos.hash::%player%} to hashed arg 1
@@ -201,8 +200,8 @@ on command "/bal", "/balance" or "/money":
 	if {@vault} is false:
 		cancel event
 		execute player command "stat"
-on command "/pl" or "plugins":
-	if player has permission "ncos.plugin":
+on command "/pl", "/help", "/plugins", "/?", "/bukkit:?", "/bukkit:help", "bukkit:plugins" or "/bukkit:pl":
+	if player has permission "ncos.plugin" or "ncos.admin":
 		stop
 	else:
 		cancel event
