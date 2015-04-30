@@ -80,12 +80,6 @@ on load:
 	send "S* > ncos.enableAPI(Skript)" to console
 	wait 6 ticks
 	send "S* < &2Done!" to console
-	send "S* > ncos.enableAPI(SkQuery)" to console
-	wait 2 seconds
-	send "S* < &2Done!" to console
-	send "S* > ncos.enableAPI(WildSkript)" to console
-	wait 1.5 seconds
-	send "S* < &2Done!" to console
 	set {ncos.enable::system} to true
 	send "{@tag} S2 >> ncos executeFile(\modules\eco.nc)" to console
 	send "{@tag} S3 >> ncos executeFile(\modules\chat.nc)" to console
