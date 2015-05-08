@@ -1,0 +1,582 @@
+options:
+	tag: &8[&6sk&4Z&8]
+
+command /skzcraft [<text>]:
+	aliases: craft, skzc
+	trigger:
+		if arg 1 is not set:
+			send "&c&m--------------&c[ {@tag} &6by niccosaint &c]&c&m--------------"
+			send "&2Aliasy do tej komendy: &6/craft, /skzc"
+			send "&3upgrade &7- Polepsz jakosc broni/zbroji"
+			send "&7Wymaga 2 komponentow na ulepszenie"
+			send "&3downgrade &7- Napraw bron kosztem jakosci. Szansa na komponent"
+			send "&3repair &7- Napraw bron. Wymaga 1 komponentu"
+			send "&3recycle &7- Zamien bron na komponenty"
+		if arg 1 is "repair":
+			if player's tool is any wood tool:
+				if player has 1 oak wood with lore "&8Skladnik do craftingu":
+					repair player's tool
+					remove 1 oak wood with lore "&8Skladnik do craftingu" from player
+					send "&2&oJuz wyglada lepiej"
+			else if player's tool is any stone tool:
+				if player has 1 cobblestone with lore "&8Skladnik do craftingu":
+					repair player's tool
+					remove 1 cobblestone with lore "&8Skladnik do craftingu" from player
+					send "&2&oJuz wyglada lepiej"
+			else if player's tool is any iron tool:
+				if player has 1 iron ingot with lore "&8Skladnik do craftingu":
+					repair player's tool
+					remove 1 iron ingot with lore "&8Skladnik do craftingu" from player
+					send "&2&oJuz wyglada lepiej"
+			else if player's tool is any leather armor:
+				if player has 1 leather with lore "&8Skladnik do craftingu":
+					repair player's tool
+					remove 1 leather with lore "&8Skladnik do craftingu" from player
+					send "&2&oJuz wyglada lepiej"
+			else if player's tool is any chain armor:
+				if player has 1 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+					repair player's tool
+					remove 1 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+					send "&2&oJuz wyglada lepiej"
+			else if player's tool is any iron armor:
+				if player has 1 iron ingot with lore "&8Skladnik do craftingu":
+					repair player's tool
+					remove 1 iron ingot with lore "&8Skladnik do craftingu" from player
+					send "&2&oJuz wyglada lepiej"
+		if arg 1 is "recycle":
+			if player's tool is any wood tool:
+				if lore of player's tool is "&aHartowany||&2150%% DMG":
+					set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eTepy||&c90%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&eTepy||&c90%% DMG":
+					set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					set lore of player's tool to "&cZlamany||&c50%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&cZlamany||&c50%% DMG":
+					set lore of player's tool to "&4Polamany||&c30%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&4Polamany||&c30%% DMG":
+					set lore of player's tool to "&4Rozstrzaskany||&415%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					remove player's tool from player
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any stone tool:
+				if lore of player's tool is "&aHartowany||&2150%% DMG":
+					set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					set lore of player's tool to "&7Normalny"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eTepy||&c90%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&eTepy||&c90%% DMG":
+					set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					set lore of player's tool to "&cZlamany||&c50%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&cZlamany||&c50%% DMG":
+					set lore of player's tool to "&4Polamany||&c30%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&4Polamany||&c30%% DMG":
+					set lore of player's tool to "&4Rozstrzaskany||&415%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					remove player's tool from player
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any iron tool:
+				if lore of player's tool is "&aHartowany||&2150%% DMG":
+					set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					set lore of player's tool to "&7Normalny"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eTepy||&c90%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&eTepy||&c90%% DMG":
+					set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					set lore of player's tool to "&cZlamany||&c50%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&cZlamany||&c50%% DMG":
+					set lore of player's tool to "&4Polamany||&c30%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&4Polamany||&c30%% DMG":
+					set lore of player's tool to "&4Rozstrzaskany||&415%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					remove player's tool from player
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any leather armor:
+				if lore of player's tool is "&f&lOZDOBNY||&a175%% PROT":
+					set lore of player's tool to "&aObwarowany||&2150%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eOslabiony||&c75%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					set lore of player's tool to "&6Zlamany||&c50%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					set lore of player's tool to "&cPolamany||&c25%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&cPolamany||&c25%% PROT":
+					remove player's tool from player
+					chance of 25%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any chain armor:
+				if lore of player's tool is "&f&lOZDOBNY||&a175%% PROT":
+					set lore of player's tool to "&aObwarowany||&2150%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eOslabiony||&c75%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					set lore of player's tool to "&6Zlamany||&c50%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					set lore of player's tool to "&cPolamany||&c25%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&cPolamany||&c25%% PROT":
+					remove player's tool from player
+					chance of 25%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any iron armor:
+				if lore of player's tool is "&f&lOZDOBNY||&a175%% PROT":
+					set lore of player's tool to "&aObwarowany||&2150%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eOslabiony||&c75%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					set lore of player's tool to "&6Zlamany||&c50%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					set lore of player's tool to "&cPolamany||&c25%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				if lore of player's tool is "&cPolamany||&c25%% PROT":
+					remove player's tool from player
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+		if arg 1 is "downgrade":
+			if player's tool is any wood tool:
+				if lore of player's tool is "&aHartowany||&2150%% DMG":
+					set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eTepy||&c90%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&eTepy||&c90%% DMG":
+					set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					set lore of player's tool to "&cZlamany||&c50%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&cZlamany||&c50%% DMG":
+					set lore of player's tool to "&4Polamany||&c30%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&4Polamany||&c30%% DMG":
+					set lore of player's tool to "&4Rozstrzaskany||&415%% DMG"
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					remove player's tool from player
+					chance of 35%:
+						give 1 oak wood with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any stone tool:
+				if lore of player's tool is "&aHartowany||&2150%% DMG":
+					set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					set lore of player's tool to "&7Normalny"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eTepy||&c90%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&eTepy||&c90%% DMG":
+					set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					set lore of player's tool to "&cZlamany||&c50%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&cZlamany||&c50%% DMG":
+					set lore of player's tool to "&4Polamany||&c30%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&4Polamany||&c30%% DMG":
+					set lore of player's tool to "&4Rozstrzaskany||&415%% DMG"
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					remove player's tool from player
+					chance of 30%:
+						give 1 cobblestone with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any iron tool:
+				if lore of player's tool is "&aHartowany||&2150%% DMG":
+					set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					set lore of player's tool to "&7Normalny"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eTepy||&c90%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&eTepy||&c90%% DMG":
+					set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					set lore of player's tool to "&cZlamany||&c50%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&cZlamany||&c50%% DMG":
+					set lore of player's tool to "&4Polamany||&c30%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&4Polamany||&c30%% DMG":
+					set lore of player's tool to "&4Rozstrzaskany||&415%% DMG"
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					remove player's tool from player
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any leather armor:
+				if lore of player's tool is "&f&lOZDOBNY||&a175%% PROT":
+					set lore of player's tool to "&aObwarowany||&2150%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eOslabiony||&c75%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					set lore of player's tool to "&6Zlamany||&c50%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					set lore of player's tool to "&cPolamany||&c25%% PROT"
+					chance of 35%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&cPolamany||&c25%% PROT":
+					remove player's tool from player
+					chance of 25%:
+						give 1 leather with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any chain armor:
+				if lore of player's tool is "&f&lOZDOBNY||&a175%% PROT":
+					set lore of player's tool to "&aObwarowany||&2150%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eOslabiony||&c75%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					set lore of player's tool to "&6Zlamany||&c50%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					set lore of player's tool to "&cPolamany||&c25%% PROT"
+					chance of 35%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&cPolamany||&c25%% PROT":
+					remove player's tool from player
+					chance of 25%:
+						give 1 string named "&7Lanchuch" with lore "&8Skladnik do craftingu" to player
+			else if player's tool is any iron armor:
+				if lore of player's tool is "&f&lOZDOBNY||&a175%% PROT":
+					set lore of player's tool to "&aObwarowany||&2150%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					set lore of player's tool to "&7Normalny"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&7Normalny":
+					set lore of player's tool to "&eOslabiony||&c75%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					set lore of player's tool to "&6Zlamany||&c50%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					set lore of player's tool to "&cPolamany||&c25%% PROT"
+					chance of 35%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+				else if lore of player's tool is "&cPolamany||&c25%% PROT":
+					remove player's tool from player
+					chance of 25%:
+						give 1 iron ingot with lore "&8Skladnik do craftingu" to player
+		if arg 1 is "upgrade":
+			if player's tool is any wood tool:
+				if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&4Polamany||&c30%% DMG"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&4Polamany||&c30%% DMG":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&cZlamany||&c50%% DMG"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&cZlamany||&c50%% DMG":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&eTepy||&c90%% DMG"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&eTepy||&c90%% DMG":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&7Normalny"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&7Normalny":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					if player has 2 oak wood with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&aHartowany||&2150%% DMG"
+						remove 2 oak wood with lore "&8Skladnik do craftingu" from player
+			else if player's tool is any stone tool:
+				if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&4Polamany||&c30%% DMG"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&4Polamany||&c30%% DMG":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&cZlamany||&c50%% DMG"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&cZlamany||&c50%% DMG":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&eTepy||&c90%% DMG"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&eTepy||&c90%% DMG":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&7Normalny"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&7Normalny":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					if player has 2 cobblestone with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&aHartowany||&2150%% DMG"
+						remove 2 cobblestone with lore "&8Skladnik do craftingu" from player
+			else if player's tool is any iron tool:
+				if lore of player's tool is "&4Rozstrzaskany||&415%% DMG":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&4Polamany||&c30%% DMG"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&4Polamany||&c30%% DMG":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&cZlamany||&c50%% DMG"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&cZlamany||&c50%% DMG":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&6Oslabiony||&c75%% DMG"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&6Oslabiony||&c75%% DMG":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&eTepy||&c90%% DMG"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&eTepy||&c90%% DMG":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&7Normalny"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&7Normalny":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&2Ostrzony||&2130%% DMG"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&2Ostrzony||&2130%% DMG":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&aHartowany||&2150%% DMG"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+			else if player's tool is any leather armor:
+				if lore of player's tool is "&cPolamany||&c25%% PROT":
+					if player has 2 leather with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&6Zlamany||&c50%% PROT"
+						remove 2 leather with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					if player has 2 leather with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&eOslabiony||&c75%% PROT"
+						remove 2 leather with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					if player has 2 leather with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&7Normalny"
+						remove 2 leather with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&7Normalny":
+					if player has 2 leather with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+						remove 2 leather with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					if player has 2 leather with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&aObwarowany||&2150%% PROT"
+						remove 2 leather with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					if player has 2 leather with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&f&lOZDOBNY||&a175%% PROT"
+						remove 2 leather with lore "&8Skladnik do craftingu" from player
+			else if player's tool is any chain armor:
+				if lore of player's tool is "&cPolamany||&c25%% PROT":
+					if player has 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&6Zlamany||&c50%% PROT"
+						remove 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					if player has 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&eOslabiony||&c75%% PROT"
+						remove 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					if player has 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&7Normalny"
+						remove 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&7Normalny":
+					if player has 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+						remove 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					if player has 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&aObwarowany||&2150%% PROT"
+						remove 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					if player has 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&f&lOZDOBNY||&a175%% PROT"
+						remove 2 string named "&7Lancuch" with lore "&8Skladnik do craftingu" from player
+			else if player's tool is any iron armor:
+				if lore of player's tool is "&cPolamany||&c25%% PROT":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&6Zlamany||&c50%% PROT"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&6Zlamany||&c50%% PROT":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&eOslabiony||&c75%% PROT"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&eOslabiony||&c75%% PROT":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&7Normalny"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&7Normalny":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&2Wzmocniony||&2125%% PROT"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&2Wzmocniony||&2125%% PROT":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&aObwarowany||&2150%% PROT"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
+				else if lore of player's tool is "&aObwarowany||&2150%% PROT":
+					if player has 2 iron ingot with lore "&8Skladnik do craftingu":
+						set lore of player's tool to "&f&lOZDOBNY||&a175%% PROT"
+						remove 2 iron ingot with lore "&8Skladnik do craftingu" from player
