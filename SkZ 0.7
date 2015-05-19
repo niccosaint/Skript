@@ -329,6 +329,13 @@ on drink:
 		add 33 to {skz.stomach::%player%}
 		wait 1 tick
 		remove 1 bottle from player
+
+on sign change:
+	if line 1 is "SkZ":
+		if line 2 is "Start":
+			set line 1 to "[&4MDW&2Z]"
+			set line 2 to "&lRozpocznij"
+
 on damage:
 	if victim is in {@world}:
 		if attacker is in {@world}:
@@ -627,7 +634,7 @@ every 10 seconds:
 
 every 15 seconds:
 	set {_skz.chestrandom} to random integer between 1 and {skz.chestcount}
-	set block at {skz.chest::%{_skz.chestrandom}%} to chest, trapped chest, crafting table or ender chest
+	set block at {skz.chest::%{_skz.chestrandom}%} to chest, trapped chest or crafting table
 
 command /skz [<text>] [<text>]:
 	trigger:
@@ -665,25 +672,24 @@ command /skz [<text>] [<text>]:
 						if player has permission "skz.svip":
 							give 2 paper named "&f&lBandaz" with lore "&8PPM aby uzyc||&8Uzycie: 10s" to player
 							give 5 bread to player
-							give 2 water bootle named "&bCzysta woda" to player
+							give 2 water bottle named "&bCzysta woda" to player
 							give 1 leather chestplate with lore "&7Normalny" to player
 							give 1 wood sword with lore "&7Normalny" to player 
 						else:
 							give 1 paper named "&f&lBandaz" with lore "&8PPM aby uzyc||&8Uzycie: 10s" to player
 							give 4 bread to player
-							give 1 water bootle named "&bCzysta woda" to player
+							give 1 water bottle named "&bCzysta woda" to player
 							give 1 leather chestplate with lore "&7Normalny" to player
 							give 1 wood sword with lore "&eTepy||&c90%% DMG" to player 
 					else:
 						give 1 paper named "&f&lBandaz" with lore "&8PPM aby uzyc||&8Uzycie: 10s" to player
 						give 3 bread to player
-						give 1 water bootle named "&bCzysta woda" to player
-						give 1 leather chestplate with lore "&eOslabiony||&c75%% PROT" to player
+						give 1 water bottle named "&bCzysta woda" to player
 						give 1 wood sword with lore "&6Oslabiony||&c75%% DMG" to player 
 					set {skz.start::%player%} to true
 				else:
 					send "{@tag} &cJuz uzyto tej komendy!"
-coammnd /skzadmin [<text>] [<player>] [<text>] [<number>]:
+command /skzadmin [<text>] [<player>] [<text>] [<number>]:
 	aliases: skza
 	trigger:
 		if player has permission "skz.admin":
@@ -713,7 +719,7 @@ coammnd /skzadmin [<text>] [<player>] [<text>] [<number>]:
 					if arg 3 is "spawn":
 						give 1 bone named "{@tag} &aRozdzka do spawnow" with lore "&7Aby dodac miejsce, na ktorym stiosz PPM na rozdzke" to arg 2
 						send "{@tag} &aDodano rozdzke do spawnow!" to arg 2
-					if arg 3 is "chest"
+					if arg 3 is "chest":
 						give 1 blaze rod named "{@tag} &6Rodzka do skrzynek" with lore "&7Aby dodac miejsce respu skrzynek, LPM na skrzynke na ktora klikniesz" to arg 2
 						send "{@tag} &aDodano rozdzke do skrzynek!" to arg 2
 			else:
