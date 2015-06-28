@@ -5,75 +5,75 @@ options:
 
 on connect:
 	if {ncauth::%player%::register} is true:
-		if {ncauth::%player%::login} is true:
+		if {ncauth::%player's uuid%::login} is true:
 			stop
 		else:
 			execute player command "/log"
 	else:
 		execute player command "/reg"
 	wait {@time} seconds
-	if {ncauth::%player%::login} is false:
+	if {ncauth::%player's uuid%::login} is false:
 		kick player due to "{@tag} &cBlad zabezpieczen: &eTimer%nl%&aNie zdazyles sie zalogowac"
 
 
 on disconnect:
-	set {ncauth::%player%::login} to false
+	set {ncauth::%player's uuid%::login} to false
 
 on any movement:
-	if {ncauth::%player%::login} is false:
+	if {ncauth::%player's uuid%::login} is false:
 		cancel event
 
 #on command:
 #    if command is not "/log" or "/loguj" or "/rej" or "/rejestruj" or "/changepassword" or "/changepass" or "/chgpass":
-#        if {ncauth::%player%::login} is false:
+#        if {ncauth::%player's uuid%::login} is false:
 #            cancel event
 #            send "{@tag} &8>> &cNie jestes zalogowany!"
 
 on chat:
-	if {ncauth::%player%::login} is false:
-		if {ncauth::%player%::help} >= 1:
+	if {ncauth::%player's uuid%::login} is false:
+		if {ncauth::%player's uuid%::help} >= 1:
 			if message is "***":
 				cancel event
-				set {ncauth::%player%::help} to 0
+				set {ncauth::%player's uuid%::help} to 0
 				send "{@tag} &3Wyszedles z procedury"
 			else:
-				if {ncauth::%player%::help} = 1:
+				if {ncauth::%player's uuid%::help} = 1:
 					cancel event
-					set {ncauth::%player%::help} to 2
+					set {ncauth::%player's uuid%::help} to 2
 					send "&aCzy masz MasPass ? &3&lTAK/NIE"
-				else if {ncauth::%player%::help} = 2:
+				else if {ncauth::%player's uuid%::help} = 2:
 					if message is "tak" or "TAK":
 						cancel event
-						set {ncauth::%player%::help} to 3
+						set {ncauth::%player's uuid%::help} to 3
 						send "{@tag} &3W celu ukonczenia weryfikacji podaj MasPass"
 					else if message is "nie" or "NIE":
 						cancel event
-						set {ncauth::%player%::help} to 4
+						set {ncauth::%player's uuid%::help} to 4
 						send "{@tag} &6No to masz problem..."
 						send "&6Moge Ci zresetowac haslo teraz, ale bedzie reset konta"
 						send "&aCzy resetowac konto ? &3&lTAK/NIE"
-				else if {ncauth::%player%::help} = 3:
+				else if {ncauth::%player's uuid%::help} = 3:
 					set {_ncauth.checkmas} to message
 					cancel event
-					if {_ncauth.checkmas} = {ncauth::%player%::maspass}:
-						set {ncauth::%player%::help} to 5
+					if {_ncauth.checkmas} = {ncauth::%player's uuid%::maspass}:
+						set {ncauth::%player's uuid%::help} to 5
 						send "&3Podaj nowe haslo (Przed nacisnieciem ENTER upewnij sie, ze dobrze je wpisales)"
-				else if {ncauth::%player%::help} = 5:
+				else if {ncauth::%player's uuid%::help} = 5:
 					set {_ncauth.newpass} to message
 					cancel event
 					loop {@hash} times:
 						set {_ncauth.newpass} to hashed {_ncauth.newpass}
-					log "%now% >> %player% >> zmiana hasla. Poprzednie haslo: %{ncauth::%player%::hash}%   Nowe haslo: %{_ncauth.newpass}%"
-					set {ncauth::%player%::hash} to {_ncauth.newpass}
+					log "%now% >> %player% >> zmiana hasla. Poprzednie haslo: %{ncauth::%player's uuid%::hash}%   Nowe haslo: %{_ncauth.newpass}%"
+					set {ncauth::%player's uuid%::hash} to {_ncauth.newpass}
 					send "&aWeryfikacja ukonczona"
 					send "&6Zaloguj sie: &b/log <haslo>"
-					set {ncauth::%player%::help} to 0
-				else if {ncauth::%player%::help} = 4:
+					set {ncauth::%player's uuid%::help} to 0
+				else if {ncauth::%player's uuid%::help} = 4:
 					if message is "tak" or "TAK":
 						cancel event
-						set {ncauth::%player%::help} to 6
+						set {ncauth::%player's uuid%::help} to 6
 						send "&cResetowanie konta..."
-						delete {ncauth::%player%::*}
+						delete {ncauth::%player's uuid%::*}
 						clear player's inventory
 						set player's balance to 0
 						send "&c&lReset ukonczony"
@@ -81,40 +81,40 @@ on chat:
 						log "%now% >> %player% >> DOKONANO RESETU KONTA"
 					else if message is "nie" or "NIE":
 						cancel event
-						set {ncauth::%player%::help} to 1
+						set {ncauth::%player's uuid%::help} to 1
 						send "&7Mozesz wpisac &b*** &7aby wyjsc"
 		else:
 			cancel event
 			send "{@tag} &8>> &cNie jestes zalogowany!"
 	else:
-		if {ncauth::%player%::help} >= 1:
+		if {ncauth::%player's uuid%::help} >= 1:
 			if message is "***":
 				cancel event
-				set {ncauth::%player%::help} to 0
+				set {ncauth::%player's uuid%::help} to 0
 				send "{@tag} &3Wyszedles z procedury"
 			else:
-				if {ncauth::%player%::help} = 1:
-					set {ncauth::%player%::help} to 3
+				if {ncauth::%player's uuid%::help} = 1:
+					set {ncauth::%player's uuid%::help} to 3
 					send "&aCzy masz MasPass ? &3&lTAK/NIE"
-				else if {ncauth::%player%::help} = 3:
-					set {ncauth::%player%::help} to 5
+				else if {ncauth::%player's uuid%::help} = 3:
+					set {ncauth::%player's uuid%::help} to 5
 					send "&3Podaj nowe haslo (Przed nacisnieciem ENTER upewnij sie, ze dobrze je wpisales)"
-				else if {ncauth::%player%::help} = 5:
+				else if {ncauth::%player's uuid%::help} = 5:
 					set {_ncauth.newpass} to message
 					cancel event
 					loop {@hash} times:
 						set {_ncauth.newpass} to hashed {_ncauth.newpass}
-					log "%now% >> %player% >> zmiana hasla. Poprzednie haslo: %{ncauth::%player%::hash}%   Nowe haslo: %{_ncauth.newpass}%"
-					set {ncauth::%player%::hash} to {_ncauth.newpass}
+					log "%now% >> %player% >> zmiana hasla. Poprzednie haslo: %{ncauth::%player's uuid%::hash}%   Nowe haslo: %{_ncauth.newpass}%"
+					set {ncauth::%player's uuid%::hash} to {_ncauth.newpass}
 					send "&aHaslo zmienione"
-					set {ncauth::%player%::help} to 0
+					set {ncauth::%player's uuid%::help} to 0
 
 command /loguj [<text>] [<text>]:
 	aliases: log
 	trigger:
 		if arg 1 is not set:
-			if {ncauth::%player%::register} is true:
-				if {ncauth::%player%::login} is false:
+			if {ncauth::%player's uuid%::register} is true:
+				if {ncauth::%player's uuid%::login} is false:
 					send "{@tag} &8>> &6Logowanie"
 					send "&8>> &3Normalne: &a/log <haslo>"
 					send "&8>> &3MasPass: &a/log -m <maspass>"
@@ -126,24 +126,24 @@ command /loguj [<text>] [<text>]:
 				send "{@tag} &8>> &cWpisz &a/register &co wiecej informacji!"
 		if arg 1 is "-m":
 			if arg 2 is set:
-				if arg 2 = {ncauth::%player%::maspass}:
-					set {ncauth::%player%::login} to true
+				if arg 2 = {ncauth::%player's uuid%::maspass}:
+					set {ncauth::%player's uuid%::login} to true
 					send "&aZalogowano!"
 				else:
 					send "{@tag} &8>> &cHasla sie nie zgadzaja..."
 					send "&cJesli nie masz MasPass, wpisz &3/chgpass"
 
 		else:
-			if {ncauth::%player%::iplock} is true:
-				if player's ip is not {ncauth::%player%::ip}:
+			if {ncauth::%player's uuid%::iplock} is true:
+				if player's ip is not {ncauth::%player's uuid%::ip}:
 					kick player due to "{@tag} &cBlad zabezpieczen: &eIPLock%nl%&aWszedles na konto z wlaczonym IPLock%nl%&7Jesli to ty, wpisz po ponownym wejsciu &a/log -m <twojmaspass>%nl%&4Jesli nie, &4&l&nTO SPADAJ NA SZCZAW ALBO NA SWOJE KONTO"
-					log "%now% >> %player% >> Proba logowania na konto z IPLock'iem. Przewidywane IP: %{ncauth::%player%::ip}%   Otrzymane IP: %player's ip%"
+					log "%now% >> %player% >> Proba logowania na konto z IPLock'iem. Przewidywane IP: %{ncauth::%player's uuid%::ip}%   Otrzymane IP: %player's ip%"
 			set {_ncauth.loghash} to arg 1
 			loop {@hash} times:
 				set {_ncauth.loghash} to hashed {_ncauth.loghash}
-			log "%now% >> %player% >> Logowanie. Przewidywane haslo: %{ncauth::%player%::hash}%   Wyliczone haslo: %{_ncauth.loghash}%"
-			if {_ncauth.loghash} = {ncauth::%player%::hash}:
-				set {ncauth::%player%::login} to true
+			log "%now% >> %player% >> Logowanie. Przewidywane haslo: %{ncauth::%player's uuid%::hash}%   Wyliczone haslo: %{_ncauth.loghash}%"
+			if {_ncauth.loghash} = {ncauth::%player's uuid%::hash}:
+				set {ncauth::%player's uuid%::login} to true
 				send "&aZalogowano!"
 				log "Gracz %player% zostal zalogowany"
 
@@ -151,9 +151,9 @@ command /loguj [<text>] [<text>]:
 command /rejestruj [<text>] [<text>]:
 	aliases: rej
 	trigger:
-		if {ncauth::%player%::register} is false:
+		if {ncauth::%player's uuid%::register} is false:
 			if arg 1 is not set:
-				if {ncauth::%player%::login} is false:
+				if {ncauth::%player's uuid%::login} is false:
 					send "{@tag} &8>> &6Rejestracja"
 					send "&8>> &a/rej <haslo> <powtorzhaslo>"
 					send "&7MasPass otrzymasz po rejestracji"
@@ -161,27 +161,27 @@ command /rejestruj [<text>] [<text>]:
 					send "{@tag} &8>> &cJuz jestes zalogowany!"
 			else:
 				if arg 1 = arg 2:
-					set {_ncauth.newmaspass::%player%} to "%player's uuid%%player's ip%%arg 1%"
-					set {_ncauth.newhash::%player%} to arg 1
+					set {_ncauth.newmaspass::%player's uuid%} to "%player's uuid%%player's ip%%arg 1%"
+					set {_ncauth.newhash::%player's uuid%} to arg 1
 					loop {@hash} times:
-						set {_ncauth.newmaspass::%player%} to hashed {_ncauth.newmaspass::%player%}
-						set {_ncauth.newhash::%player%} to hashed {_ncauth.newhash::%player%}
-					set {ncauth::%player%::uuid} to player's uuid
-					set {ncauth::%player%::ip} to player's ip
-					set {ncauth::%player%::maspass} to {_ncauth.newmaspass::%player%}
-					set {ncauth::%player%::hash} to {_ncauth.newhash::%player%}
-					set {ncauth::%player%::register} to true
-					set {ncauth::%player%::time} to now
+						set {_ncauth.newmaspass::%player's uuid%} to hashed {_ncauth.newmaspass::%player's uuid%}
+						set {_ncauth.newhash::%player's uuid%} to hashed {_ncauth.newhash::%player's uuid%}
+					set {ncauth::%player's uuid%::uuid} to player's uuid
+					set {ncauth::%player's uuid%::ip} to player's ip
+					set {ncauth::%player's uuid%::maspass} to {_ncauth.newmaspass::%player's uuid%}
+					set {ncauth::%player's uuid%::hash} to {_ncauth.newhash::%player's uuid%}
+					set {ncauth::%player's uuid%::register} to true
+					set {ncauth::%player's uuid%::time} to now
 					send "&aPomyslnie zarejestrowano!"
-					send "&3Twoj MasPass: &6%{ncauth::%player%::maspass}%"
+					send "&3Twoj MasPass: &6%{ncauth::%player's uuid%::maspass}%"
 					send " "
 					send "&4&lZapisz go gdzies, aby:"
 					send "&8>> &3Korzystanie z kazdego komputera nawet z wlaczonym IPLock'iem"
 					send "&8>> &5Zastapic zwykle haslo na wypadek zapomnienia"
 					send "&8>> &7Ochrona przed niepozadanym IPLock'iem"
 					log "%now% >> %player% >> rejestracja z nastepujacymi danymi:"
-					log "Haslo: %{ncauth::%player%::hash}%    MasPass: %{ncauth::%player%::maspass}%"
-					log "UUID: %{ncauth::%player%::uuid}%   IP: %{ncauth::%player%::ip}%"
+					log "Haslo: %{ncauth::%player's uuid%::hash}%    MasPass: %{ncauth::%player's uuid%::maspass}%"
+					log "UUID: %{ncauth::%player's uuid%::uuid}%   IP: %{ncauth::%player's uuid%::ip}%"
 				else:
 					send "{@tag} &8>> &cHasla sie nie zgadzaja..."
 
@@ -191,8 +191,8 @@ command /rejestruj [<text>] [<text>]:
 command /changepassword:
 	aliases: changepass, chgpass
 	trigger:
-		if {ncauth::%player%::register} is true:
-			set {ncauth::%player%::help} to 1
+		if {ncauth::%player's uuid%::register} is true:
+			set {ncauth::%player's uuid%::help} to 1
 			send "{@tag} &bPrzypominanie hasla"
 			send "&8Aby wyjsc z procedury, w dowolnej chwili wpisz &b***"
 			send "&7&lAby kontynuowac wpisz cokolwiek"
@@ -211,19 +211,24 @@ command /ncauth [<text>] [<player>]:
 				send "    {@tag} &b&lby niccosaint  &a&lDOJARKA"
 				send "&6&m--------------------------------------------"
 				send "&aGracz: &3%arg 2%"
-				send "&aZarejestrowal sie &3%{ncauth::%arg 2%::time}% &az &3%{ncauth::%arg 2%::ip}%"
-				send "&eUUID gracza to %{ncauth::%arg 2%::uuid}%"
-				send "&aJego haslo (zaszyfrowane): %{ncauth::%arg 2%::hash}%"
-				send "&7MasPass: &8&l%{ncauth::%arg 2%::maspass}%"
-				if {ncauth::%arg 2%::iplock} is true:
+				send "&aZarejestrowal sie &3%{ncauth::%uuid of arg 2%::time}% &az &3%{ncauth::%uuid of arg 2%::ip}%"
+				send "&eUUID gracza to %{ncauth::%uuid of arg 2%::uuid}%"
+				send "&aJego haslo (zaszyfrowane): %{ncauth::%uuid of arg 2%::hash}%"
+				send "&7MasPass: &8&l%{ncauth::%uuid of arg 2%::maspass}%"
+				if {ncauth::%uuid of arg 2%::iplock} is true:
 					send "&2&l=== Gracz ma wlaczonego IPLock'a ==="
 		if arg 1 is "iplock":	
 			if arg 2 is set:
-				if {ncauth::%arg 2%::iplock} is false:
-					set {ncauth::%arg 2%::iplock} to true
+				if {ncauth::%uuid of arg 2%::iplock} is false:
+					set {ncauth::%uuid of arg 2%::iplock} to true
 					send "&2&lWlaczyles IPLock dla &b&l%arg 2%"
 					log "%now% >> %sender% >> wlaczony IPLock dla %arg 2%"
 				else:
-					set {ncauth::%arg 2%::iplock} to false
+					set {ncauth::%arg 2%'s uuid::iplock} to false
 					send "&4&lWylaczyles IPLock dla &b&l%arg 2%"
 					log "%now% >> %sender% >> wylaczony IPLock dla %arg 2%"
+
+command /maspass:
+	trigger:
+		{ncauth::%player's uuid%::login} is true:
+			send "&aTwoj MasPass: &8&l%{ncauth::%player's uuid%::maspass}%"
