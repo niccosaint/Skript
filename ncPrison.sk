@@ -1,0 +1,434 @@
+variables:
+	{ncprison::%player%::stat::rank} = 1
+	{ncprison::%player%::stat::viplv} = 1
+	{ncprison::%player%::stat::vipdur} = 0
+	{ncprison::%player%::stat::vippt} = 0
+	{ncprison::%player%::person::gender} = "none"
+	{ncprison::%player%::person::name} = "none"
+	{ncprison::%player%::person::surname} = "none"
+	{ncprison::%player%::person::age} = 0
+	{ncprison::%player%::person::height} = 0
+	{ncprison::%player%::person::weight} = 0
+	{ncprison::%player%::person::crime} = "none"
+	{ncprison::%player%::person::penalty} = "none"
+	{ncprison::%player%::person::step} = 0
+
+command /nowapostac:
+	trigger:
+		if {ncprison::%player%::person::step} = 0:
+			set {ncprison::%player%::person::step} to 1
+			send "&8[&cPrison&8] &6Zanim zaczniesz na serwerze Prison musisz skonfigurowac postac. Jak Ci na imie?"
+		else:
+			if {ncprison::%player%::stat::rank} >= 7:
+				if player's balance >= 20000000:
+					remove 20000000 from player's account
+					set {ncprison::%player%::person::step} to 1
+					send "&8[&cPrison&8] &6Jak Ci na imie?"
+				else:
+					send "&4&l/!\ &6Za malo pieniedzy! (20 mln Cr.)"
+			else:
+				send "&4&l/!\ &6Musisz dojsc do wyzszego sektora aby zmienic tozsamosc! (min. &3&l7&6)"
+
+on chat:
+	if {ncprison::%player%::person::step} is between 1 and 4:
+		if {ncprison::%player%::person::step} = 1:
+			cancel event
+			set {ncprison::%player%::person::name} to message
+			set {ncprison::%player%::person::step} to 2
+			send "&6Wymysl sobie nazwisko"
+		else if {ncprison::%player%::person::step} = 2:
+			cancel event
+			set {ncprison::%player%::person::surname} to message
+			set {ncprison::%player%::person::step} to 3
+			send "&6Podaj plec (K/M)"
+		else if {ncprison::%player%::person::step} = 3:
+			cancel event
+			if message is "K":
+				set {ncprison::%player%::person::gender} to "k"
+				set {ncprison::%player%::person::step} to 4
+				send "&6Czyli jestes &d%{ncprison::%player%::person::name}% %{ncprison::%player%::person::surname}% ? &6(TAK/NIE)"
+			else if message is "M":
+				set {ncprison::%player%::person::gender} to "m"
+				set {ncprison::%player%::person::step} to 4
+				send "&6Czyli jestes &3%{ncprison::%player%::person::name}% %{ncprison::%player%::person::surname}% ? &6(TAK/NIE)"
+			else:
+				send "&6Podaj plec (K/M)"
+		else if {ncprison::%player%::person::step} = 4:
+			if message is "NIE" or "nie":
+				cancel event
+				set {ncprison::%player%::person::step} to 1
+				send "&6No dobra, zacznijmy od nowa. Jak masz na imie?"
+			if message is "TAK" or "tak":
+				cancel event
+				send "&6Generuje statystyki..."
+				set {ncprison::%player%::person::step} to 5
+				set {ncprison::%player%::person::age} to random integer between 18 and 65
+				set {ncprison::%player%::person::height} to random integer between 140 and 205
+				set {ncprison::%player%::person::weight} to random integer between 60 and 140
+				set {ncprison::%player%::person::crime} to "Zabojstwo" or "Kradziez" or "Handel narkotykami" or "Gwalcenie" or "Jazda po pijaku" or "Rozboj" or "Zabawa dildosem" or "Nielegalny pobyt za granica" or "Terroryzm"
+				set {_yr} to random number between 0.25 and 50
+				if {_yr} >= 30:
+					if {_yr} >= 48:
+						set {ncprison::%player%::person::penalty} to "KARA SMIERCI"
+					else:
+						set {ncprison::%player%::person::penalty} to "DOZYWOCIE"
+				else:
+					set {ncprison::%player%::person::penalty} to "%{_yr}% lat"
+				send "&c&m------------&c[ &4DANE OSOBOWE &c]&c&m------------"
+				if {ncprison::%player%::person::gender} is "m":
+					send "&3%{ncprison::%player%::person::name}% %{ncprison::%player%::person::surname}% &7(%{ncprison::%player%::person::age}% lat)"
+				if {ncprison::%player%::person::gender} is "k":
+					send "&d%{ncprison::%player%::person::name}% %{ncprison::%player%::person::surname}% &7(%{ncprison::%player%::person::age}% lat)"
+				send "&2Wzrost: &3%{ncprison::%player%::person::height}% cm    &2Waga: &3%{ncprison::%player%::person::weight}% kg"
+				send "&aWyrok: %{ncprison::%player%::person::penalty}% za %{ncprison::%player%::person::crime}%"
+				send " "
+				send "&6Jesli chcesz zmienic, wpisz &a/nowapostac &7(od sektora &3&l7 &7za 20 mln Cr.)"
+
+	if {ncprison::%player%::stat::vipdur} > now:
+		cancel event
+		if {ncprison::%player%::stat::viplv} = 1:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &1VIP1 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 2:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &9VIP2 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 3:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &3VIP3 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 4:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &bVIP4 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 5:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &fVIP5 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 6:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &eVIP6 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 7:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &6VIP7 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 8:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &cVIP8 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 9:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &4VIP9 &7| %player's display name% &8>> &7%message%"
+		else if {ncprison::%player%::stat::viplv} = 10:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| &4&lVIP10 &7| %player's display name% &8>> &7%message%"
+	else:
+		cancel event
+		if message contains "&0" or "&1" or "&2" or "&3" or "&4" or "&5" or "&6" or "&7" or "&8" or "&9" or "&a" or "&b" or "&c" or "&d" or "&e" or "&f" or "&l" or "&m" or "&n" or "&k" or "&r" or "&o":
+			if player has permission "ncprison.color":
+				broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| %player's display name% &8>> &7%message%"
+			else:
+				send "&4&l/!\ &6Nie mozesz pisac na kolorowo. Kup VIP aby odblokowac dostep do pisania na kolorowo"
+		else:
+			broadcast "&a&l%{ncprison::%player%::stat::rank}% &7| %player's display name% &8>> &7%message%"
+
+command /postac [<player>]:
+	trigger:
+		if arg 1 is not set:
+			send "&c&m------------&c[ &4DANE OSOBOWE (ty) &c]&c&m------------"
+			if {ncprison::%player%::person::gender} is "m":
+				send "&3%{ncprison::%player%::person::name}% %{ncprison::%player%::person::surname}% &7(%{ncprison::%player%::person::age}% lat)"
+			if {ncprison::%player%::person::gender} is "k":
+				send "&d%{ncprison::%player%::person::name}% %{ncprison::%player%::person::surname}% &7(%{ncprison::%player%::person::age}% lat)"
+			send "&2Wzrost: &3%{ncprison::%player%::person::height}% cm    &2Waga: &3%{ncprison::%player%::person::weight}% kg"
+			send "&aWyrok: %{ncprison::%player%::person::penalty}% za %{ncprison::%player%::person::crime}%"
+			send " "
+			send "&6Jesli chcesz zmienic, wpisz &a/nowapostac &7(od sektora &3&l7 &7za 20 mln Cr.)"
+			if {ncprison::%player%::stat::vipdur} > now:
+				if {ncprison::%player%::stat::viplv} >= 3:
+					send "&aMozesz sprawdzic dane osobowe innych graczy! &3/postac <nick>"
+		if arg 1 is set:
+			if {ncprison::%player%::stat::vipdur} > now:
+				if {ncprison::%player%::stat::viplv} >= 3:
+					send "&c&m------------&c[ &4DANE OSOBOWE (%arg 1%) &c]&c&m------------"
+					if {ncprison::%arg 1%::person::gender} is "m":
+						send "&3%{ncprison::%arg 1%::person::name}% %{ncprison::%arg 1%::person::surname}% &7(%{ncprison::%arg 1%::person::age}% lat)"
+					if {ncprison::%arg 1%::person::gender} is "k":
+						send "&d%{ncprison::%arg 1%::person::name}% %{ncprison::%arg 1%::person::surname}% &7(%{ncprison::%arg 1%::person::age}% lat)"
+					send "&2Wzrost: &3%{ncprison::%arg 1%::person::height}% cm    &2Waga: &3%{ncprison::%arg 1%::person::weight}% kg"
+					send "&aWyrok: %{ncprison::%arg 1%::person::penalty}% za %{ncprison::%arg 1%::person::crime}%"
+				else:
+					send "&4&l/!\ &6Masz za niski poziom VIP, aby moc sprawdzac dane innych graczy! (min. &3VIP3&6)"
+			else:
+				send "&4&l/!\ &6Ta komenda wymaga aktywnego VIP'a!"
+
+command /vip [<text>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			set {_nxtlv} to (({ncprison::%player%::stat::viplv}+2)^2)*100+100
+			send "&3&m--------------------&3[ &b&lVIP &3]&3&m------------------------"
+			if {ncprison::%player%::stat::viplv} = 1:
+				send "&1VIP1 &7>> &9VIP2"
+			else if {ncprison::%player%::stat::viplv} = 2:
+				send "&9VIP2 &7>> &3VIP3"
+			else if {ncprison::%player%::stat::viplv} = 3:
+				send "&3VIP3 &7>> &bVIP4"
+			else if {ncprison::%player%::stat::viplv} = 4:
+				send "&bVIP4 &7>> &fVIP5"
+			else if {ncprison::%player%::stat::viplv} = 5:
+				send "&fVIP5 &7>> &eVIP6"
+			else if {ncprison::%player%::stat::viplv} = 6:
+				send "&eVIP6 &7>> &6VIP7"
+			else if {ncprison::%player%::stat::viplv} = 7:
+				send "&6VIP7 &7>> &cVIP8"
+			else if {ncprison::%player%::stat::viplv} = 8:
+				send "&cVIP8 &7>> &4VIP9"
+			else if {ncprison::%player%::stat::viplv} = 9:
+				send "&4VIP9 &7>> &4&lVIP10"
+			else if {ncprison::%player%::stat::viplv} = 10:
+				send "&4&lVIP10 &aMAX LV"
+			if {ncprison::%player%::stat::viplv} <= 9:
+				send "&6&lPunkty VIP &e(%{ncprison::%player%::stat::vippt}% / %{_nxtlv}% pkt)"
+			if {ncprison::%player%::stat::vipdur} > now:
+				send "&aVIP wazny do &3%{ncprison::%player%::stat::vipdur}%"
+			else:
+				send "&4VIP nieaktywny. Zakup go aby czerpac z niego korzysci"
+			send "&5&lTwoj VIP daje:"
+			set {_drop} to 1+{ncprison::%player%::stat::viplv}*0.1
+			send "&8>> &6Pisanie na kolorowo"
+			send "&8>> &6Pisanie w roznych stylach (pogrubienie, podkreslenie itp.)"
+			send "&8>> &bWspolczynnik dropu surowcow: %{_drop}%x"
+			if {ncprison::%player%::stat::viplv} >= 3:
+				send "&8>> &aSprawdzanie danych osobowych innych graczy &7/postac <nick>"
+				if {ncprison::%player%::stat::viplv} >= 6:
+					send "&8>> &4Mozesz sie ubiegac o posade Moderatora"
+					if {ncprison::%player%::stat::viplv} >= 8:
+						send "&8>> &b&lZestaw VIP &7/zestaw vip"
+			send "&6&lDokup punkty: &a/vip punkty"
+			send "&6&lPrzedluz VIP: &a/vip czas"
+		if arg 1 is "punkty":
+			send "&3&m--------------------&3[ &b&lVIP &3]&3&m------------------------"
+			send "&4&l/!\ &4Zakup po wpisaniu komendy jest NIEODWRACALNY !!"
+			send "&aAby zakupic pakiet wpisz &7/vip punkty <nr pakietu>"
+			send "&31 &220 pkt &7- 40&6€"
+			send "&32 &250 pkt &7- 100&6€"
+			send "&33 &2100 pkt &7- 180&6€ &7(Oszczedzasz 10%%)"
+			send "&34 &2500 pkt &7- 800&6€ &7(Oszczedzasz 20%%)"
+			send "&35 &21 000 pkt &7- 1 300&6€ &7(Oszczedzasz 35%%)"
+			if arg 2 is "1":
+				if {ncprison::%player%::stat::eur} >= 40:
+					remove 40 from {ncprison::%player%::stat::eur}
+					add 20 to {ncprison::%player%::stat::vippt}
+					send "&aDziekujemy za zakup :)"
+				else:
+					send "&4&l/!\ &6Za malo €€€ ! Moze chcesz kupic ich troche ?"
+			if arg 2 is "2":
+				if {ncprison::%player%::stat::eur} >= 100:
+					remove 100 from {ncprison::%player%::stat::eur}
+					add 50 to {ncprison::%player%::stat::vippt}
+					send "&aDziekujemy za zakup :)"
+				else:
+					send "&4&l/!\ &6Za malo €€€ ! Moze chcesz kupic ich troche ?"
+			if arg 2 is "3":
+				if {ncprison::%player%::stat::eur} >= 180:
+					remove 180 from {ncprison::%player%::stat::eur}
+					add 100 to {ncprison::%player%::stat::vippt}
+					send "&aDziekujemy za zakup :)"
+				else:
+					send "&4&l/!\ &6Za malo €€€ ! Moze chcesz kupic ich troche ?"
+			if arg 2 is "4":
+				if {ncprison::%player%::stat::eur} >= 800:
+					remove 800 from {ncprison::%player%::stat::eur}
+					add 500 to {ncprison::%player%::stat::vippt}
+					send "&aDziekujemy za zakup :)"
+				else:
+					send "&4&l/!\ &6Za malo €€€ ! Moze chcesz kupic ich troche ?"
+			if arg 2 is "5":
+				if {ncprison::%player%::stat::eur} >= 1300:
+					remove 1300 from {ncprison::%player%::stat::eur}
+					add 1000 to {ncprison::%player%::stat::vippt}
+					send "&aDziekujemy za zakup :)"
+
+
+		if arg 1 is "czas":
+			send "&3&m--------------------&3[ &b&lVIP &3]&3&m------------------------"
+			send "&4&l/!\ &4Zakup po wpisaniu komendy jest NIEODWRACALNY !!"
+			send "&aAby zakupic pakiet wpisz &7/vip czas <nr pakietu>"
+			send "&3- &230 i 60 min &7- dropia sie ze stone i drewna"
+			send "&31 &21 dzien &7- 100&6€"
+			send "&32 &27 dni &7- 500&6€"
+			send "&33 &230 dni &7- 2 000&6€"
+			if arg 2 is "1":
+				if {ncprison::%player%::stat::eur} >= 100:
+					remove 100 from {ncprison::%player%::stat::eur}
+					if {ncprison::%player%::stat::vipdur} > now:
+						add 1 day to {ncprison::%player%::stat::vipdur}
+					else:
+						set {ncprison::%player%::stat::vipdur} to now
+						add 1 day to {ncprison::%player%::stat::vipdur}
+					send "&aDziekujemy za zakup VIP :)"
+					send "&2Ranga jest dostepna do &3%{ncprison::%player%::stat::vipdur}%"
+				else:
+					send "&4&l/!\ &6Za malo €€€ ! Moze chcesz kupic ich troche ?"
+
+command /sektor [<text>]:
+	trigger:	
+		if arg 1 is not set:
+			send "&2&m------------------&2[ &a&lSEKTORY &2]&2&m----------------------"
+			send "&aAby teleportowac do sektora, musisz miec do niego dostep"
+			send "&7/sektor <1-11> &8(Sektor 11 oznacza wolnosc)"
+		if arg 1 is "1":
+			teleport player to {ncprison::data:sektor:1}
+		if arg 1 is "2":
+			if {ncprison::%player%::stat::rank} >= 2:
+				teleport player to {ncprison::data:sektor:2}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &a&l2 &6aby wejsc"
+		if arg 1 is "3":
+			if {ncprison::%player%::stat::rank} >= 3:
+				teleport player to {ncprison::data:sektor:3}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &e&l3 &6aby wejsc"
+		if arg 1 is "4":
+			if {ncprison::%player%::stat::rank} >= 4:
+				teleport player to {ncprison::data:sektor:4}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &6&l4 &6aby wejsc"
+		if arg 1 is "5":
+			if {ncprison::%player%::stat::rank} >= 5:
+				teleport player to {ncprison::data:sektor:5}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &c&l5 &6aby wejsc"
+		if arg 1 is "6":
+			if {ncprison::%player%::stat::rank} >= 6:
+				teleport player to {ncprison::data:sektor:6}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &4&l6 &6aby wejsc"
+		if arg 1 is "7":
+			if {ncprison::%player%::stat::rank} >= 7:
+				teleport player to {ncprison::data:sektor:7}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &3&l7 &6aby wejsc"
+		if arg 1 is "8":
+			if {ncprison::%player%::stat::rank} >= 8:
+				teleport player to {ncprison::data:sektor:8}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &5&l8 &6aby wejsc"
+		if arg 1 is "9":
+			if {ncprison::%player%::stat::rank} >= 9:
+				teleport player to {ncprison::data:sektor:9}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &d&l9 &6aby wejsc"
+		if arg 1 is "10":
+			if {ncprison::%player%::stat::rank} >= 10:
+				teleport player to {ncprison::data:sektor:10}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &f&l10 &6aby wejsc"
+		if arg 1 is "11":
+			if {ncprison::%player%::stat::rank} >= 11:
+				teleport player to {ncprison::data:sektor:11}
+			else:
+				send "&4&l/!\ &6Nie mozesz tu wchodzic. Zdobadz range &a&l&nWOLNOSC &6aby wejsc"
+every 5 seconds:
+	loop all players:
+		# KASA
+		set {_bal.k::%loop-player%} to loop-player's balance/1000
+		set {_bal.m::%loop-player%} to loop-player's balance/1000000
+		set {_bal.b::%loop-player%} to loop-player's balance/1000000000
+		display board named "&4MDW&2Z" to loop-player
+		move display of loop-player to sidebar
+		make score of "&6&lStan konta  " in board of loop-player to 15
+		if {_bal.b::%loop-player%} > 1:
+			make score of "%{_bal.b::%loop-player%}% mld Cr." in board of loop-player to 14
+		else if {_bal.m::%loop-player%} > 1:
+			make score of "%{_bal.m::%loop-player%}% mln Cr." in board of loop-player to 14
+		else if {_bal.k::%loop-player%} > 1:
+			make score of "%{_bal.k::%loop-player%}% tys Cr." in board of loop-player to 14
+		else:
+			make score of "%loop-player's balance% Cr." in board of loop-player to 14
+		make score of "%{ncprison::%loop-player%::stat::eur}% &6€" in board of loop-player to 13
+		# KONIEC KASY
+		make score of "&1" in board of loop-player to 12
+		# WYMAGANIA
+		set {_lvup::%loop-player%} to (({ncprison::%loop-player%::stat::rank}+1)^3)*50
+		if {_lvup::%loop-player%} > 1000:
+			set {_lvup2::%loop-player%} to {_lvup::%loop-player%}/1000
+		set {_rkup::%loop-player%} to {ncprison::%loop-player%::stat::rank}+1
+		make score of "&6&lSektor" in board of loop-player to 11
+		make score of "%{ncprison::%loop-player%::stat::rank}% >> &l%{_rkup::%loop-player%}%" in board of loop-player to 10
+		if {_lvup::%loop-player%} > 1000:
+			set {_lvup::%loop-player%} to {_lvup::%loop-player%}/1000
+			make score of "&3za %{_lvup2::%loop-player%}% mln Cr." in board of loop-player to 9
+		else:
+			make score of "&3za %{_lvup::%loop-player%}% tys Cr." in board of loop-player to 9
+		# KONIEC WYMAGAN
+		make score of "&2" in board of loop-player to 8
+		# POSTEP
+		make score of "&6&lPostep" in board of loop-player to 7
+		set {_pr::%loop-player%} to loop-player's balance/((({ncprison::%loop-player%::stat::rank}+1)^3)*50000)
+		set {_prw::%loop-player%} to {_pr::%loop-player%}*100
+		if {_pr::%loop-player%} >= 1:
+			make score of "&a/awans 100%%" in board of loop-player to 6
+		else:
+			make score of "%{_prw::%loop-player%}%%%" in board of loop-player to 6
+
+		set {_viplvup::%loop-player%} to (({ncprison::%loop-player%::stat::viplv}+2)^2)*100+100
+		if {ncprison::%loop-player%::stat::vippt} >= {_viplvup::%loop-player%}:
+			remove {_viplvup::%loop-player%} from {ncprison::%loop-player%::stat::vippt}
+			add 1 to {ncprison::%loop-player%::stat::viplv}
+			if {ncprison::%loop-player%::stat::vipdur} > now:
+				add 1 day to {ncprison::%loop-player%::stat::vipdur}
+			else:
+				set {ncprison::%loop-player%::stat::vipdur} to now
+				add 1 day to {ncprison::%loop-player%::stat::vipdur}
+			send "&6&lWlasnie awansowales w poziomie VIP!" to loop-player
+
+command /awans:
+	trigger:
+		set {_c} to (({ncprison::%player%::stat::rank}+1)^3)*50000
+		if player's balance >= {_c}:
+			add 1 to {ncprison::%player%::stat::rank}
+			remove {_c} from player's balance
+			send "&a&lGRATUALCJE! &6Awansowales do rangi &3%{ncprison::%player%::stat::rank}%"
+			broadcast "&6[&c!&6] &a&l%player% &bawansowal do rangi &a&l%{ncprison::%player%::stat::rank}%"
+		else:
+			set {_nd1} to (({ncprison::%player%::stat::rank}+1)^3)*50
+			if {_nd1} >= 1000:
+				set {_nd2} to {_nd1}/1000
+				send "&4&l/!\ &6Za malo pieniedzy na awans! (%{_nd2}% mln Cr.)"
+			else:
+				send "&4&l/!\ &6Za malo pieniedzy na awans! (%{_nd1}% tys Cr.)"
+
+command /drop:
+	trigger:
+		set {_vip} to 1+{ncprison::%player%::stat::viplv}*0.1
+		set {_chcov} to 5+{ncprison::%player%::stat::rank}*{_vip}
+		set {_chirv} to (3+{ncprison::%player%::stat::rank}*0.75)*{_vip}
+		if {ncprison::%player%::stat::rank} >= 3:
+			set {_chrdv} to (1.9+{ncprison::%player%::stat::rank}*0.6)*{_vip}
+			set {_chlpv} to (1.2+{ncprison::%player%::stat::rank}*0.5)*{_vip}
+			if {ncprison::%player%::stat::rank} >= 7:
+				set {_chgov} to (1+{ncprison::%player%::stat::rank}*0.4)*{_vip}
+				set {_chemv} to (0.6+{ncprison::%player%::stat::rank}*0.2)*{_vip}
+				if {ncprison::%player%::stat::viplv} >= 6:
+					set {_chdiv} to (0.5+{ncprison::%player%::stat::rank}*0.1)*{_vip}
+
+		set {_chco} to 5+{ncprison::%player%::stat::rank}
+		set {_chir} to 3+{ncprison::%player%::stat::rank}*0.75
+		if {ncprison::%player%::stat::rank} >= 3:
+			set {_chrd} to 1.9+{ncprison::%player%::stat::rank}*0.6
+			set {_chlp} to 1.2+{ncprison::%player%::stat::rank}*0.5
+			if {ncprison::%player%::stat::rank} >= 7:
+				set {_chgo} to 1+{ncprison::%player%::stat::rank}*0.4
+				set {_chem} to 0.6+{ncprison::%player%::stat::rank}*0.2
+
+		send "&4&m--------------------&4[ &c&lDROP &4]&4&m------------------------"
+		send "&aPrzy twoich statystykach mozesz wykopac:"
+		send "&aMaterial     &6Bez VIP   &bz VIP   &fMAX"
+		send "&8&lWegiel &7- &6%{_chco}%%%   &b%{_chcov}%%%   &f30%%"
+		send "&7Zelazo &7- &6%{_chir}%%%   &b%{_chirv}%%%   &f21%%"
+		if {ncprison::%player%::stat::rank} >= 3:
+			if {ncprison::%player%::stat::rank} >= 7:
+				send "&4Redstone &7- &6%{_chrd}%%%   &b%{_chrdv}%%%   &f15.8%%"
+				send "&1Lapis &7- &6%{_chlp}%%%   &b%{_chlpv}%%%   &f12.4%%"
+				send "&6Zloto &7- &6%{_chgo}%%%   &b%{_chgov}%%%   &f10%%"
+				send "&aSzmaragd &7- &6%{_chem}%%%   &b%{_chemv}%%%   &f5.2%%"
+				send "&b&lDiament &7 &6&m---&r   &b%{_chdiv}%%%   &f3%%"
+				send "&7Diament jest dostepny od &eVIP6 &7lub wyzej"
+			else:
+				send "&4Redstone &7- &6%{_chrd}%%%   &b%{_chrdv}%%%   &f15.8%%"
+				send "&1Lapis &7- &6%{_chlp}%%%   &b%{_chlpv}%%%   &f12.4%%"
+				send "&6Zloto &7- &4&lNIEDOSTEPNE &7(od rangi &3&l7 &7)"
+				send "&aSzmaragd &7- &4&lNIEDOSTEPNE &7(od rangi &3&l7 &7)"
+				send "&b&lDiament &7- &4&lNIEDOSTEPNE &7(od rangi &3&l7 &7oraz &eVIP6&7)"
+		else:
+			send "&4Redstone &7- &4&lNIEDOSTEPNE &7(od rangi &e&l3 &7)"
+			send "&1Lapis &7- &4&lNIEDOSTEPNE &7(od rangi &e&l3 &7)"
+			send "&6Zloto &7- &4&lNIEDOSTEPNE &7(od rangi &3&l7 &7)"
+			send "&aSzmaragd &7- &4&lNIEDOSTEPNE &7(od rangi &3&l7 &7)"
+			send "&b&lDiament &7- &4&lNIEDOSTEPNE &7(od rangi &3&l7 &7oraz &eVIP6&7)"
+			
