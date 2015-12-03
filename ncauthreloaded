@@ -1,0 +1,8 @@
+variables:
+	{ncauth::%player's uuid%::login} = false
+	{ncauth::%player's uuid%::register} = false
+	{ncauth::%player's uuid%::help} = 0
+	{ncauth::%player's uuid%::pass} = <none>
+	{ncauth::%player's uuid%::maspass} = <none>
+	{ncuath::%player's uuid%::reg} = 0
+	{ncauth::%player's uuid%::ip} = 0
