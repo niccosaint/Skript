@@ -479,7 +479,7 @@ on inventory open:
 		close player's inventory
 
 on damage:
-	if {ncauth::%player's uuid%::login} is false:
+	if {ncauth::%victim's uuid%::login} is false:
 		cancel event
 
 on drop:
