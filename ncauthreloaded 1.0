@@ -1,9 +1,9 @@
 options:
-	time: 60
-	hash: 100
-	minpass: 8
-	maxpass: 32
-	tag: &aLogowanie &7>
+	time: 60 #Czas na zalogowanie sie
+	hash: 100 #Ilosc powtorzen liczenia hasha
+	minpass: 8 #Minimalna dlugosc hasla
+	maxpass: 32 #Maksymalna dlugosc hasla
+	tag: &anc&3Auth &7>
 
 on chat:
 	if {ncauth::%player's uuid%::chat} is not "none":
@@ -439,32 +439,6 @@ on chat:
 					send "&7W przypadku wlamania na konto poinformuj administracje"
 					send "&8============================================"
 
-command /hash <integer> <text>:
-	trigger:
-		set {_h} to arg 2
-		set {_l} to arg 1
-		set {_n} to 1
-		send "&7&l=========== &6&lHasla &7&l==========="
-		loop {_l} times:
-			set {_h} to hashed {_h}
-			send "&7%{_n}%: &6%{_h}%"
-			add 1 to {_n}
-			wait 1 tick
-				
-command /ncauth [<text>]:
-	aliases: chgpass, changepass
-	trigger:
-		set {ncauth::%player's uuid%::chat} to "start"
-		send "&8============================================"
-		send "      &2&lPomoc autoryzacyjna"
-		send ""
-		send "&6&l1. Zmien haslo"
-		send "&6&l2. Wlacz/wylacz tryb bezpiecznego logowania"
-		send "&6&l3. Zmien sposob logowania"
-		send "&7Wpisz 1, 2 lub 3 i nacisnij ENTER"
-		send "&7W kazdej chwili mozesz wpisac &b&l*** &7aby wyjsc"
-		send "&8============================================"
-
 on disconnect:	
 	set {ncauth::%player's uuid%::login} to false
 
@@ -509,3 +483,29 @@ every second:
 					add -1 to {ncauth::%loop-player's uuid%::time}
 				else:
 					kick loop-player due to "{@tag} &aNastepnym razem zaloguj sie szybciej"
+
+command /hash <integer> <text>:
+	trigger:
+		set {_h} to arg 2
+		set {_l} to arg 1
+		set {_n} to 1
+		send "&7&l=========== &6&lHasla &7&l==========="
+		loop {_l} times:
+			set {_h} to hashed {_h}
+			send "&7%{_n}%: &6%{_h}%"
+			add 1 to {_n}
+			wait 1 tick
+				
+command /ncauth [<text>]:
+	aliases: chgpass, changepass
+	trigger:
+		set {ncauth::%player's uuid%::chat} to "start"
+		send "&8============================================"
+		send "      &2&lPomoc autoryzacyjna"
+		send ""
+		send "&6&l1. Zmien haslo"
+		send "&6&l2. Wlacz/wylacz tryb bezpiecznego logowania"
+		send "&6&l3. Zmien sposob logowania"
+		send "&7Wpisz 1, 2 lub 3 i nacisnij ENTER"
+		send "&7W kazdej chwili mozesz wpisac &b&l*** &7aby wyjsc"
+		send "&8============================================"
