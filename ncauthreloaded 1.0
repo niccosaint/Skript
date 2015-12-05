@@ -330,7 +330,7 @@ on chat:
 					send ""
 					send "&7Powtorz nowe haslo i nacisnij ENTER"
 					send "&8============================================"
-			else if {ncauth::%player's uuid%::chat} is "login":
+			else if {ncauth::%player's uuid%::chat} is "login" or "login-maspass":
 				if message is "BRAK" or "brak":
 					set {ncauth::%player's uuid%::chat} to "forgot"
 					send "&8============================================"
@@ -385,17 +385,67 @@ on chat:
 					send "&7W przypadku wlamania na konto poinformuj administracje"
 					send "&8============================================"
 				else if message is "WROC" or "wroc":
-					set {ncauth::%player's uuid%::chat} to "login"
-					send "&8============================================"
-					send "      &2&lPomoc autoryzacyjna"
-					send ""
-					send "&6&lWpisz swoje haslo"
-					send ""
-					send ""
-					send ""
-					send "&7Wpisz i nacisnij ENTER"
-					send "&7Wpisz &b&lBRAK &7aby odzyskac haslo"
-					send "&8============================================"
+					if {ncauth::%player's uuid%::iplock} is true:
+						if player's ip is not {ncauth::%player's uuid%::ip}:
+							set {ncauth::%player's uuid%::chat} to "login-maspass"
+							send "&8============================================"
+							send "      &2&lPomoc autoryzacyjna"
+							send "   &aTryb bezpiecznego logowania"
+							send ""
+							send "&6&lWpisz swoj MasPass"
+							send ""
+							send ""
+							send "&7Wpisz i nacisnij ENTER"
+							send "&7Wpisz &b&lBRAK &7aby odzyskac dostep"
+							send "&8============================================"
+						else:
+							set {ncauth::%player's uuid%::chat} to "login"
+							send "&8============================================"
+							send "      &2&lPomoc autoryzacyjna"
+							send ""
+							send "&6&lWpisz swoje haslo"
+							send ""
+							send ""
+							send ""
+							send "&7Wpisz i nacisnij ENTER"
+							send "&7Wpisz &b&lBRAK &7aby odzyskac haslo"
+							send "&8============================================"
+					else:
+						set {ncauth::%player's uuid%::chat} to "login"
+						send "&8============================================"
+						send "      &2&lPomoc autoryzacyjna"
+						send ""
+						send "&6&lWpisz swoje haslo"
+						send ""
+						send ""
+						send ""
+						send "&7Wpisz i nacisnij ENTER"
+						send "&7Wpisz &b&lBRAK &7aby odzyskac haslo"
+						send "&8============================================"
+				else:
+					if message = {ncauth::%player's uuid%::maspass}:
+						set {ncauth::%player's uuid%::chat} to "setpass"
+						send "&8============================================"
+						send "      &2&lPomoc autoryzacyjna"
+						send ""
+						send "&6&lWpisz nowe haslo ({@minpass}-{@maxpass} znakow)"
+						send ""
+						send ""
+						send ""
+						send ""
+						send "&7Wpisz nowe haslo i nacisnij ENTER"
+						send "&8============================================"
+					else:	
+						send "&8============================================"
+						send "      &2&lPomoc autoryzacyjna"
+						send ""
+						send "&6Czy masz MasPass?"
+						send "&4Blad: MasPass jest niepoprawny"
+						send ""
+						send "&7Wpisz jesli go masz"
+						send "&7Wpisz &b&lNIE &7jesli go nie masz"
+						send "&7Wpisz &b&lWROC &7jesli przypomniales sobie haslo"
+						send "&8============================================"
 			else if {ncauth::%player's uuid%::chat} is "reset-nl":
 				if message is "TAK" or "tak":
 					delete {ncauth::%player's uuid%::*}
@@ -462,6 +512,21 @@ on connect:
 		send "&7Wpisz cokolwiek i nacisnij ENTER"
 		send "&8============================================"
 	else if {ncauth::%player's uuid%::login} is false:
+		if {ncauth::%player's uuid%::iplock} is true:
+			if player's ip is not {ncauth::%player's uuid%::ip}:
+				set {ncauth::%player's uuid%::chat} to "login-maspass"
+				wait 1 second
+				send "&8============================================"
+				send "      &2&lPomoc autoryzacyjna"
+				send "   &aTryb bezpiecznego logowania"
+				send ""
+				send "&6&lWpisz swoj MasPass"
+				send ""
+				send ""
+				send "&7Wpisz i nacisnij ENTER"
+				send "&7Wpisz &b&lBRAK &7aby odzyskac dostep"
+				send "&8============================================"
+
 		set {ncauth::%player's uuid%::chat} to "login"
 		wait 1 second
 		send "&8============================================"
@@ -478,7 +543,7 @@ on connect:
 every second:
 	loop all players:
 		if {ncauth::%loop-player's uuid%::login} is false:
-			if {ncauth::%loop-player's uuid%::chat} is "login", "register", "setpass" or "setconf":
+			if {ncauth::%loop-player's uuid%::chat} is "login", "register", "setpass", or "setconf":
 				if {ncauth::%loop-player's uuid%::time} >= 1:
 					add -1 to {ncauth::%loop-player's uuid%::time}
 				else:
