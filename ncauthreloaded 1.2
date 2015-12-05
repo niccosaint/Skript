@@ -15,30 +15,17 @@ on chat:
 		else:
 			if {ncauth::%player's uuid%::chat} is "start":
 				if message is "1":
-					if {ncauth::%player's uuid%::login} is true:
-						set {ncauth::%player's uuid%::chat} to "chgpass"
-						send "&8============================================"
-						send "      &2&lPomoc autoryzacyjna"
-						send ""
-						send "&6&lWpisz nowe haslo ({@minpass}-{@maxpass} znakow)"
-						send ""
-						send ""
-						send ""
-						send "&7Wpisz nowe haslo i nacisnij ENTER"
-						send "&7W kazdej chwili mozesz wpisac &b&l*** &7aby wyjsc"
-						send "&8============================================"
-					else:
-						set {ncauth::%player's uuid%::chat} to "maspass-chgpass"
-						send "&8============================================"
-						send "      &2&lPomoc autoryzacyjna"
-						send ""
-						send "&6&lWpisz MasPass aby kontynuowac"
-						send ""
-						send ""
-						send "&7Wpisz swoj MasPass i nacisnij ENTER"
-						send "&7Zapomniales/as? Wpisz &b&lRESET"
-						send "&7W kazdej chwili mozesz wpisac &b&l*** &7aby wyjsc"
-						send "&8============================================"
+					set {ncauth::%player's uuid%::chat} to "chgpass"
+					send "&8============================================"
+					send "      &2&lPomoc autoryzacyjna"
+					send ""
+					send "&6&lWpisz nowe haslo ({@minpass}-{@maxpass} znakow)"
+					send ""
+					send ""
+					send ""
+					send "&7Wpisz nowe haslo i nacisnij ENTER"
+					send "&7W kazdej chwili mozesz wpisac &b&l*** &7aby wyjsc"
+					send "&8============================================"
 				else if message is "2":
 					set {ncauth::%player's uuid%::chat} to "maspass-iplock"
 					send "&8============================================"
@@ -232,22 +219,17 @@ on chat:
 					send "&8============================================"
 			else if {ncauth::%player's uuid%::chat} is "reset":
 				if message is "TAK" or "tak":
-					delete {ncauth::%player's uuid%::*}
-					clear player's inventory
-					set player's balance to 0
 					send "&8============================================"
-					send "      &2&lPomoc autoryzacyjna"
+					send "    &6&l/// &4&l/!\ BLAD /!\ &6///"
 					send ""
-					send "&a&lKonto zresetowane"
-					send "&6Za chwile zostaniesz wyrzucony z serwera"
-					send ""
-					send ""
+					send "&6W celu odzyskania dostepu do konta wymagany jest"
+					send "&6kontakt z osoba posiadajaca dostep do konsoli"
 					send ""
 					send ""
+					send ""
+					send "&7Wpisz &b&lWROC"
 					send "&8============================================"
-					wait 5 seconds
-					kick player due to "{@tag} &aProsze sie zarejestrowac"
-				else if message is "NIE" or "nie":
+				else if message is "NIE", "nie", "WROC" or "wroc":
 					set {ncauth::%player's uuid%::chat} to "success"
 					send "&8============================================"
 					send "      &2&lPomoc autoryzacyjna"
@@ -298,12 +280,13 @@ on chat:
 					send "&8============================================"
 			else if {ncauth::%player's uuid%::chat} is "setconf":
 				if message = {ncuath::%player's uuid%::temppass}:
-					set {_np} to message
+					set {_np} to "%message%%player's uuid%"
 					set {_maspass} to "%player's ip%%player's uuid%%message%%now%"
 					loop {@hash} times:
 						set {_np} to hashed {_np}
 						set {_maspass} to hashed {_maspass}
 					set {ncauth::%player's uuid%::pass} to {_np}
+					set {ncauth::%player's uuid%::maspass} to {_maspass}
 					set {ncauth::%player's uuid%::ip} to player's ip
 					set {ncauth::%player's uuid%::reg} to now
 					set {ncauth::%player's uuid%::chat} to "none"
@@ -344,7 +327,7 @@ on chat:
 					send "&7Wpisz &b&lWROC &7jesli przypomniales sobie haslo"
 					send "&8============================================"
 				else:
-					set {_pass} to message
+					set {_pass} to "%message%%player's uuid%"
 					loop {@hash} times:
 						set {_pass} to hashed {_pass}
 					if {_pass} = {ncauth::%player's uuid%::pass}:
@@ -373,16 +356,15 @@ on chat:
 						send "&8============================================"
 			else if {ncauth::%player's uuid%::chat} is "forgot":
 				if message is "NIE" or "nie":
-					set {ncauth::%player's uuid%::chat} to "reset-nl"
 					send "&8============================================"
-					send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+					send "    &6&l/// &4&l/!\ BLAD /!\ &6///"
 					send ""
-					send "&6Moge zdjac zabezpieczenie z tego konta."
-					send "&6Jednak wiaze sie z usunieciem wszystkich statystyk,"
-					send "&6danych do logowania, osiagniec itp."
-					send "&4&lCzy chcesz kontynuowac?"
-					send "&7Wpisz &b&lTAK &7lub &b&lNIE &7i nacisnij ENTER"
-					send "&7W przypadku wlamania na konto poinformuj administracje"
+					send "&6W celu odzyskania dostepu do konta wymagany jest"
+					send "&6kontakt z osoba posiadajaca dostep do konsoli"
+					send ""
+					send ""
+					send ""
+					send "&7Wpisz &b&lWROC"
 					send "&8============================================"
 				else if message is "WROC" or "wroc":
 					if {ncauth::%player's uuid%::iplock} is true:
@@ -448,21 +430,16 @@ on chat:
 						send "&8============================================"
 			else if {ncauth::%player's uuid%::chat} is "reset-nl":
 				if message is "TAK" or "tak":
-					delete {ncauth::%player's uuid%::*}
-					clear player's inventory
-					set player's balance to 0
 					send "&8============================================"
-					send "      &2&lPomoc autoryzacyjna"
+					send "    &6&l/// &4&l/!\ BLAD /!\ &6///"
 					send ""
-					send "&a&lKonto zresetowane"
-					send "&6Za chwile zostaniesz wyrzucony z serwera"
-					send ""
-					send ""
+					send "&6W celu odzyskania dostepu do konta wymagany jest"
+					send "&6kontakt z osoba posiadajaca dostep do konsoli"
 					send ""
 					send ""
+					send ""
+					send "&7Wpisz &b&lWROC"
 					send "&8============================================"
-					wait 5 seconds
-					kick player due to "{@tag} &aProsze sie zarejestrowac"
 				else if message is "NIE" or "nie":
 					set {ncauth::%player's uuid%::chat} to "forgot"
 					send "&8============================================"
@@ -479,15 +456,39 @@ on chat:
 				if message is "RESET" or "reset":
 					set {ncauth::%player's uuid%::chat} to "reset"
 					send "&8============================================"
-					send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+					send "    &6&l/// &4&l/!\ BLAD /!\ &6///"
 					send ""
-					send "&6Resetowanie konta wiaze sie z usunieciem wszystkich"
-					send "&6statystyk, danych do logowania, osiagniec itp."
-					send "&4&lCzy chcesz kontynuowac?"
-					send "&7Wpisz &b&lTAK &7lub &b&lNIE &7i nacisnij ENTER"
-					send "&7W kazdej chwili mozesz wpisac &b&l*** &7aby wyjsc"
-					send "&7W przypadku wlamania na konto poinformuj administracje"
+					send "&6W celu odzyskania dostepu do konta wymagany jest"
+					send "&6kontakt z osoba posiadajaca dostep do konsoli"
+					send ""
+					send ""
+					send ""
+					send ""
 					send "&8============================================"
+
+on any movement:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on click:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on inventory open:
+	if {ncauth::%player's uuid%::login} is false:
+		close player's inventory
+
+on damage:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on drop:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on pickup:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
 
 on disconnect:	
 	set {ncauth::%player's uuid%::login} to false
@@ -559,8 +560,8 @@ command /hash <integer> <text>:
 			set {_h} to hashed {_h}
 			send "&7%{_n}%: &6%{_h}%"
 			add 1 to {_n}
-			wait 1 tick
-				
+			
+
 command /ncauth [<text>]:
 	aliases: chgpass, changepass
 	trigger:
