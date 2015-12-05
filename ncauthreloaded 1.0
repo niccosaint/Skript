@@ -306,7 +306,7 @@ on chat:
 					set {ncauth::%player's uuid%::pass} to {_np}
 					set {ncauth::%player's uuid%::ip} to player's ip
 					set {ncauth::%player's uuid%::reg} to now
-					set {ncauth::%player's uuid%::chat} to "success"
+					set {ncauth::%player's uuid%::chat} to "none"
 					set {ncauth::%player's uuid%::login} to true
 					set {ncauth::%player's uuid%::register} to true
 					send "&8============================================"
@@ -317,7 +317,7 @@ on chat:
 					send ""
 					send ""
 					send ""
-					send "&7Wpisz &b&l*** &7aby wyjsc"
+					send ""
 					send "&8============================================"
 				else:
 					send "&8============================================"
@@ -349,7 +349,7 @@ on chat:
 						set {_pass} to hashed {_pass}
 					if {_pass} = {ncauth::%player's uuid%::pass}:
 						set {ncauth::%player's uuid%::login} to true
-						set {ncauth::%player's uuid%::chat} to "success"
+						set {ncauth::%player's uuid%::chat} to "none"
 						send "&8============================================"
 						send "      &2&lPomoc autoryzacyjna"
 						send ""
@@ -358,7 +358,7 @@ on chat:
 						send ""
 						send ""
 						send ""
-						send "&7Wpisz &b&l*** &7aby wyjsc"
+						send ""
 						send "&8============================================"
 					else:
 						send "&8============================================"
