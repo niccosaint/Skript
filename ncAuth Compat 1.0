@@ -1,0 +1,44 @@
+options:
+	hash: 100 #Musi byc taka sama, co w glownym skrypcie
+
+on connect:
+	wait 21 ticks
+	if premium status of player is PREMIUM:
+		if {ncauth::%player's uuid%::register} is false:
+			set {_tp} to random integer between 100000 and 999999
+			set {_np} to "%{_tp}%%player's uuid%"
+			set {_maspass} to "%player's ip%%player's uuid%%{_tp}%%now%"
+			loop {@hash} times:
+				set {_np} to hashed {_np}
+				set {_maspass} to hashed {_maspass}
+			set {ncauth::%player's uuid%::pass} to {_np}
+			set {ncauth::%player's uuid%::ip} to player's ip
+			set {ncauth::%player's uuid%::chat} to "none"
+			set {ncauth::%player's uuid%::register} to true
+			set {ncauth::%player's uuid%::login} to true
+			set {ncauth::%player's uuid%::nick} to player
+			set {ncauth::%player's uuid%::reg} to now
+			set {ncauth::%player's uuid%::nick} to player
+			send "&8============================================"
+			send "      &2&lPomoc autoryzacyjna"
+			send ""
+			send "&a&lZostales zarejestrowany/a jako konto Premium!"
+			send "&aMilej gry!"
+			send ""
+			send ""
+			send "&7Twoje tymczasowe zapasowe haslo: &6%{_tp}%"
+			send ""
+			send "&8============================================"
+		else:
+			if {ncauth::%player's uuid%::login} is false:
+				set {ncauth::%player's uuid%::login} to true
+				send "&8============================================"
+				send "      &2&lPomoc autoryzacyjna"
+				send ""
+				send "&a&lZostales zalogowany/a jako konto Premium!"
+				send "&aMilej gry!"
+				send ""
+				send ""
+				send ""
+				send ""
+				send "&8============================================"
