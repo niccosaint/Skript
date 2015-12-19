@@ -114,6 +114,13 @@ every second in {@world}:
 				set block at location of loop-player to Bedrock
 				send "&7&oTo, co zrobisz z tym bedrockiem to juz twoja sprawa" to loop-player
 				set {lckmsh::%loop-player%::dur} to 0
+				
+on break:
+	if event-block is brown mushroom or red mushroom:
+		chance of 5%:
+			cancel event
+			set event-block to air
+			give 1 brown mushroom named "&eLucky Mushroom" to player
 
 on step on grass or stone: #(EKSPERYMENTALNE)
 	if {lckmsh::%player%::midas} is true:
