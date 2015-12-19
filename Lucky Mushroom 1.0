@@ -1,0 +1,141 @@
+# LUCKY MUSHROOM
+# BY niccosaint aka Derpy Hooves
+# Wymaga SkQuery i WildSkript
+options:
+	world: "Lobby"
+	
+on join:
+	if {lckmsh::%player%::dur} is not set:
+		set {lckmsh::%player%::dur} to 0
+
+on leftclick:
+	if player's tool is brown mushroom named "&eLucky Mushroom":
+		if {lckmsh::%player%::dur} <= 0:
+			remove 1 brown mushroom named "&eLucky Mushroom" from player
+			set {lckmsh::%player%::effect} to random integer between 1 and 20
+			set {lckmsh::%player%::dur} to random integer between 10 and 60
+			set {n::%player%} to random integer between 1 and 3
+		else:
+			send "&cNie mozesz jeszcze uzyc tego grzybka (zostalo %{lckmsh::%player%::dur}% sek.)"
+
+every second in {@world}:
+	loop all players in all worlds:
+		if {lckmsh::%loop-player%::dur} >= 1:
+			add -1 to {lckmsh::%loop-player%::dur}
+			if {lckmsh::%loop-player%::effect} = 1: #Wysadzenie gracza w powietrze
+				create an explosion of force 10 at the loop-player
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 2: #Odruchy wymiotne
+				play raw sound "mob.zombie.death" at loop-player with pitch 1 volume 5
+				give cocoa beans named "&6Wymiociny" with lore "&8Tak, to twoje wymiociny...||&8O! Marchewka!" to loop-player
+				add -3 to {lckmsh::%loop-player%::dur}
+			else if {lckmsh::%loop-player%::effect} = 3: #Klatwa - nieugaszalny plomien
+				ignite loop-player for 1 second
+			else if {lckmsh::%loop-player%::effect} = 4: #Pierdyknie piorun
+				strike lightning at the loop-player
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 5: #Klatwa - doslowny odlot
+				push loop-player forward with force 5
+				apply nausea to loop-player for 20 ticks
+			else if {lckmsh::%loop-player%::effect} = 6: #Tryb Midasa - wszystko, po czym pojdzie i wezmie do reki zmienia sie w zloto (EKSPERYMENTALNE)
+				set {lckmsh::%loop-player%::midas} to true
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 7: #Respienie mobow
+				if {lckmsh::%loop-player%::dur} >= 24:
+					if {lckmsh::%loop-player%::dur} >= 48:
+						spawn 3 pigs above loop-player
+					else:
+						spawn 3 zombie pigmen above loop-player
+				else:
+					spawn 3 zombies above loop-player
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 8: #Spowolnienie
+				apply slowness {n::%loop-player%} to loop-player for 20 ticks
+			else if {lckmsh::%loop-player%::effect} = 9: #Oslepienie
+				apply blindness {n::%loop-player%} to loop-player for 20 ticks
+			else if {lckmsh::%loop-player%::effect} = 10: #Szybkosc
+				apply speed {n::%loop-player%} to loop-player for 20 ticks
+			else if {lckmsh::%loop-player%::effect} = 11: #Predkosc kopania
+				apply haste {n::%loop-player%} to loop-player for 20 ticks
+			else if {lckmsh::%loop-player%::effect} = 12: #Miotanie creeperami
+				shoot a creeper from the loop-player
+				add -3 to {lckmsh::%loop-player%::dur}
+			else if {lckmsh::%loop-player%::effect} = 13: #Pulapka - Spadające kowadla
+				set block under loop-player to stone bricks
+				set block 1 meter west under loop-player to stone bricks
+				set block 1 meter east under loop-player to stone bricks
+				set block 1 meter north under loop-player to stone bricks
+				set block 1 meter south under loop-player to stone bricks
+				set block 1 meter northwest under loop-player to stone bricks
+				set block 1 meter northeast under loop-player to stone bricks
+				set block 1 meter southwest under loop-player to stone bricks
+				set block 1 meter southeast under loop-player to stone bricks
+				set block 1 meter west above loop-player to stone bricks
+				set block 1 meter east above loop-player to stone bricks
+				set block 1 meter north above loop-player to stone bricks
+				set block 1 meter south above loop-player to stone bricks
+				set block 1 meter northwest above loop-player to stone bricks
+				set block 1 meter northeast above loop-player to stone bricks
+				set block 1 meter southwest above loop-player to stone bricks
+				set block 1 meter southeast above loop-player to stone bricks
+				set block 20 meters above loop-player to anvil
+				set block 21 meters above loop-player to anvil
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 14: #Miotanie strzalami
+				set {lckmsh::%loop-player%::shoot} to {lckmsh::%loop-player%::dur}*10
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 15: #Spadajacy blok diamentu
+				spawn falling block of diamond block 30 meters above loop-player
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 16: #Spadajacy blok zlota
+				spawn falling block of gold block 30 meters above loop-player
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 17: #Pulapka - Komora do duszenia sie
+				set block under loop-player to obsidian
+				set block 1 meter west under loop-player to obsidian
+				set block 1 meter east under loop-player to obsidian
+				set block 1 meter north under loop-player to obsidian
+				set block 1 meter south under loop-player to obsidian
+				set block 1 meter northwest under loop-player to obsidian
+				set block 1 meter northeast under loop-player to obsidian
+				set block 1 meter southwest under loop-player to obsidian
+				set block 1 meter southeast under loop-player to obsidian
+				set block 1 meter west above loop-player to obsidian
+				set block 1 meter east above loop-player to obsidian
+				set block 1 meter north above loop-player to obsidian
+				set block 1 meter south above loop-player to obsidian
+				set block 1 meter northwest above loop-player to obsidian
+				set block 1 meter northeast above loop-player to obsidian
+				set block 1 meter southwest above loop-player to obsidian
+				set block 1 meter southeast above loop-player to obsidian
+				set block 1 meter above loop-player to obsidian
+				set {lckmsh::%loop-player%::dur} to 0
+			else if {lckmsh::%loop-player%::effect} = 18: #Bedrock...
+				set block at location of loop-player to Bedrock
+				send "&7&oTo, co zrobisz z tym bedrockiem to juz twoja sprawa" to loop-player
+				set {lckmsh::%loop-player%::dur} to 0
+
+on step on grass or stone: #(EKSPERYMENTALNE)
+	if {lckmsh::%player%::midas} is true:
+		set event-block to gold block
+
+on tool change: #(EKSPERYMENTALNE)
+	if {lckmsh::%player%::midas} is true:
+		if player's tool is a block:
+			set player's tool to gold block
+		else:
+			if player's tool is not air:
+				if player's tool is melon seeds, pumpkin seeds, nether wart, seeds, or gold nugget:
+					set player's tool to gold nugget
+				else:
+					set player's tool to gold ingot
+
+on death:
+	set {lckmsh::%player%::midas} to false
+
+every 2 ticks in {@world}:
+	loop all players in all worlds:
+		if {lckmsh::%loop-player%::shoot} >= 1:
+			shoot an arrow from loop-player
+			add -1 to {lckmsh::%loop-player%::shoot}
+
