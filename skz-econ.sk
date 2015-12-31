@@ -1,0 +1,63 @@
+command /pocket [<text>]:
+	trigger:
+		if arg 1 is not set:
+			set {_v} to player's balance/1
+			set {_p} to amount of wooden button named "&6Miedziak" with lore "||&7Wartosc: 1c" in player's inventory
+			set {_d} to amount of stone button named "&8Dziesiatka" with lore "||&7Wartosc: 10c" in player's inventory
+			set {_q} to amount of iron pressure plate named "&7Cwiartka" with lore "||&7Wartosc: 25c" in player's inventory
+			set {_dc} to amount of gold pressure plate named "&eDolar" with lore "||&7Wartosc: $1.00" in player's inventory
+			set {_dn} to amount of green carpet named "&2&l10 Dolarow" with lore "||&7Wartosc: $10.00" in player's inventory
+			set {_t} to ({_dn}*10)+{_dc}+({_q}*0.25)+({_d}*0.1)+({_p}*0.01)
+			send "&e&m-------------------------------------------------"
+			send "    &2&lStan konta:"
+			if {_v} < 1:
+				set {_v} to {_v}*100
+				send "  &b&lBank:&6 %{_v}%¢"
+			else:
+				send "  &b&lBank:&6&l $%{_v}%"
+			if {_t} < 1:
+				set {_t} to {_t}*100
+				send "  &b&lPortfel:&6 %{_t}%¢"
+			else:
+				send "  &b&lPortfel:&6&l $%{_t}%"
+		else:
+			if player has permission "skz.mod":
+				if arg 1 is set:
+					set {_v} to balance of arg 1/1
+					set {_p} to amount of wooden button named "&6Miedziak" with lore "||&7Wartosc: 1c" in inventory of arg 1
+					set {_d} to amount of stone button named "&8Dziesiatka" with lore "||&7Wartosc: 10c" in inventory of arg 1
+					set {_q} to amount of iron pressure plate named "&7Cwiartka" with lore "||&7Wartosc: 25c" in inventory of arg 1
+					set {_dc} to amount of gold pressure plate named "&eDolar" with lore "||&7Wartosc: $1.00" in inventory of arg 1
+					set {_dn} to amount of green carpet named "&2&l10 Dolarow" with lore "||&7Wartosc: $10.00" in inventory of arg 1
+					set {_t} to ({_dn}*10)+{_dc}+({_q}*0.25)+({_d}*0.1)+({_p}*0.01)
+					send "&e&m-------------------------------------------------"
+					send "    &2&lStan konta &3(%arg 1%)&2&l:"
+					if {_v} < 1:
+						set {_v} to {_v}*100
+						send "  &b&lBank:&6 %{_v}%¢"
+					else:
+						send "  &b&lBank:&6&l $%{_v}%"
+					if {_t} < 1:
+						set {_t} to {_t}*100
+						send "  &b&lPortfel:&6 %{_t}%¢"
+					else:
+						send "  &b&lPortfel:&6&l $%{_t}%"
+
+
+on death:
+	if victim is not a player:
+		if attacker is a player:
+			clear drops
+			give 1 wooden button named "&6Miedziak" with lore "||&7Wartosc: 1c" to attacker
+			chance of 65%:
+				give 2 wooden button named "&6Miedziak" with lore "||&7Wartosc: 1c" to attacker
+			chance of 20%:
+				give 1 stone button named "&8Dziesiatka" with lore "||&7Wartosc: 10c" to attacker
+			chance of 4%:
+				give 1 iron pressure plate named "&7Cwiartka" with lore "||&7Wartosc: 25c" to attacker
+
+on load:
+	set {skz::config::enable::econ} to true
+
+on unload:
+	set {skz::config::enable::econ} to false
