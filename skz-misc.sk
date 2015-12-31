@@ -1,2 +1,0 @@
-on join:
-	set tab header to "&6&lSk&4&lZ &6Tryb testowy" and footer to "&4&lTryb deweloperski" for player
