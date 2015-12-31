@@ -1,0 +1,28 @@
+aliases:
+	ender eye = 381
+options:
+	w: "mineZ"
+on chat:
+	if player is in {@w}:
+		if player is holding ender eye named "&6Walkie Talkie":
+			loop all players in {@w}:
+				if loop-player has ender eye named "&6Walkie Talkie":
+					cancel event
+					send "&6[RADIO] %display name of player% &3>> &f%message%" to loop-player
+		else:
+			loop all players in {@w}:
+				cancel event
+				if distance between player and loop-player <= 60:
+					if distance between player and loop-player <= 40:
+						if distance between player and loop-player <= 20:
+							send "%display name of player% &3>> &f%message%" to loop-player
+						else:
+							send "%display name of player% &3>> &7%message%" to loop-player
+					else:
+						send "%display name of player% &3>> &8%message%" to loop-player
+
+on load:
+	set {skz::config::enable::chat} to true
+
+on unload:
+	set {skz::config::enable::chat} to false
