@@ -459,6 +459,13 @@ on chat:
 					send "{@tag} &4&lKonto gracza nie zostalo wyzerowane. Administrator anulowal proces"
 					send "&7Wpisz &b&lWROC &7aby wrocic do menu glownego"
 					send "&7Wpisz &b&l*** &7w kazdej chwili aby wyjsc"
+	else:
+		set {_pass} to "%message%%player's uuid%"
+		loop {@hash} times:
+			set {_pass} to hashed {_pass}
+		if {_pass} = {ncauth::%player's uuid%::pass}:
+			cancel event
+			send "{@tag} &cNigdy nie podawaj swojego hasla osobom trzecim!"
 
 on any movement:
 	if {ncauth::%player's uuid%::login} is false:
@@ -522,11 +529,13 @@ on connect:
 			send "{@tag} &6&lWpisz swoje haslo"
 			send "&7Wpisz i nacisnij ENTER"
 			send "&7Wpisz &b&lBRAK &7aby odzyskac haslo"
+	else:
+		send "{@tag} &a&lTwoja sesja zostala przywrocona! Milej gry!"
 
 every second:
 	loop all players:
 		if {ncauth::%loop-player's uuid%::login} is false:
-			if {ncauth::%loop-player's uuid%::chat} is "login", "register", "setpass", or "setconf":
+			if {ncauth::%loop-player's uuid%::chat} is "login" or "login-maspass":
 				if {ncauth::%loop-player's uuid%::time} >= 1:
 					add -1 to {ncauth::%loop-player's uuid%::time}
 				else:
