@@ -332,6 +332,7 @@ on chat:
 					loop {@hash} times:
 						set {_pass} to hashed {_pass}
 					if {_pass} = {ncauth::%player's uuid%::pass}:
+						wait 1 tick
 						set {ncauth::%player's uuid%::login} to true
 						set {ncauth::%player's uuid%::chat} to "none"
 						send "&8============================================"
@@ -870,6 +871,13 @@ on chat:
 					send "&7Wpisz &b&lWROC &7aby wrocic do menu glownego"
 					send "&7Wpisz &b&l*** &7w kazdej chwili aby wyjsc"
 					send "&8============================================"
+	else:
+		set {_pass} to "%message%%player's uuid%"
+		loop {@hash} times:
+			set {_pass} to hashed {_pass}
+		if {_pass} = {ncauth::%player's uuid%::pass}:
+			cancel event
+			send "{@tag} &cNigdy nie podawaj swojego hasla osobom trzecim!"
 
 on any movement:
 	if {ncauth::%player's uuid%::login} is false:
@@ -960,11 +968,22 @@ on connect:
 			send "&7Wpisz i nacisnij ENTER"
 			send "&7Wpisz &b&lBRAK &7aby odzyskac haslo"
 			send "&8============================================"
+	else:
+		send "&8============================================"
+		send "      &2&lPomoc autoryzacyjna"
+		send ""
+		send "&a&lTwoja sesja zostala przywrocona"
+		send "&aMilej gry!"
+		send ""
+		send ""
+		send ""
+		send ""
+		send "&8============================================"
 
 every second:
 	loop all players:
 		if {ncauth::%loop-player's uuid%::login} is false:
-			if {ncauth::%loop-player's uuid%::chat} is "login", "register", "setpass", or "setconf":
+			if {ncauth::%loop-player's uuid%::chat} is "login" or "login-maspass":
 				if {ncauth::%loop-player's uuid%::time} >= 1:
 					add -1 to {ncauth::%loop-player's uuid%::time}
 				else:
