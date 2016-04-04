@@ -4,6 +4,7 @@ options:
 	minpass: 8 #Minimalna dlugosc hasla
 	maxpass: 32 #Maksymalna dlugosc hasla
 	tag: &anc&3Auth &7>
+	tpt: 10 #Czas, po jakim gracz zostanie teleportowany na miejsce, gdzie sie pojawil, jesli nie jest zalogowany (w ticks)
 
 on chat:
 	if {ncauth::%player's uuid%::chat} is not "none":
@@ -468,8 +469,10 @@ on chat:
 			send "{@tag} &cNigdy nie podawaj swojego hasla osobom trzecim!"
 
 on any movement:
-	if {ncauth::%player's uuid%::login} is false:
-		cancel event
+	if {ncauth::%player's uuid%::place} is set:
+		if {ncauth::%player's uuid%::login} is false:
+			wait {@tpt} ticks
+			teleport player to {ncauth::%player's uuid%::place}
 
 on click:
 	if {ncauth::%player's uuid%::login} is false:
@@ -494,8 +497,10 @@ on pickup:
 on disconnect:	
 	set {ncauth::%player's uuid%::login} to false
 	set {ncauth::%player's uuid%::admin::mode} to "none"
+	delete {ncauth::%player's uuid%::place}
 
 on connect:
+	set {ncauth::%player's uuid%::place} to player's location
 	set {ncauth::%player's uuid%::time} to {@time}
 	if {ncauth::%player's uuid%::register} is not set:
 		set {ncauth::%player's uuid%::register} to false
