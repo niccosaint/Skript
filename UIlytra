@@ -1,0 +1,62 @@
+#UIlytra by niccosaint aka Derpy Hooves
+#CC BY-SA 3.0
+aliases:
+	elytra = 443
+
+options:
+	hgmulti: 10 #współczynnik "wysokości" gracza
+	sealv: 62 #poziom morza. Wszystko poniżej jest trakowane jako 0
+	maxhg: 2000 #Wysokość, przy której zapali się lampka WYS
+	spdup: true #Czy włączyć przyśpieszanie za pomocą sprintu? (ew. W+L CTRL)
+
+every 4 ticks:
+	loop all players:
+		if loop-player is wearing elytra:
+			if {@spdup} is true:
+				if loop-player is sprinting:
+					push loop-player forwards with force 0.15
+			set {_p} to location of loop-player
+			wait 3 ticks
+			set {_pd} to distance between loop-player and {_p}
+			set {_pd} to rounded {_pd}*5*3.6
+			set {_a} to y-coordinate of loop-player
+			set {_sl} to {@sealv}
+			set {_mp} to {@hgmulti}
+			set {_ad} to rounded ({_a}-{_sl})*{_mp}
+			set {_mh} to {@maxhg}
+			if {_pd} >= 150:
+				set {_pr} to "&c❱❱❱❱❱❱❱❱❱❱"
+			else:
+				set {_n} to 1
+				loop 10 times:
+					if {_pd} >= 15*{_n}:
+						set {_r::%{_n}%} to "&6❱"
+					else:
+						set {_r::%{_n}%} to "&8❱"
+					add 1 to {_n}
+				set {_pr} to "%{_r::1}%%{_r::2}%%{_r::3}%%{_r::4}%%{_r::5}%%{_r::6}%%{_r::7}%%{_r::8}%%{_r::9}%%{_r::10}%"
+			if {_ad} >= {@maxhg}:
+				set {_wy} to "&cWYS"
+			else:
+				set {_wy} to "&8WYS"
+			if durability of loop-player's chestplate >= 370:
+				set {_pa} to "&cPAL"
+			else:
+				set {_pa} to "&8PAL"
+			if {_ad} >= 2300:
+				if loop-player's pitch < 0:
+					push loop-player backwards with force 0.35
+			if {_ad} < 1000:
+				if {_ad} < 100:
+					if {_ad} < 10:
+						if {_ad} < 0:
+							set {_ap} to "0000"
+						else:
+							set {_ap} to "000%{_ad}%"
+					else:
+						set {_ap} to "00%{_ad}%"
+				else:
+					set {_ap} to "0%{_ad}%"
+			else:
+				set {_ap} to "%{_ad}%"
+			set action bar of loop-player to "&7&l[ &c&l%{_pr}% &c%{_ap}% &6m n. p. m. &7&l| %{_wy}%  %{_pa}% &7&l]"
