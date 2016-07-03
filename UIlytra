@@ -43,7 +43,7 @@ every 4 ticks:
 				set {_pa} to "&cPAL"
 			else:
 				set {_pa} to "&8PAL"
-			if {_ad} >= 2300:
+			if {_ad} >= {_mh}+300:
 				if loop-player's pitch < 0:
 					push loop-player backwards with force 0.35
 			if {_ad} < 1000:
