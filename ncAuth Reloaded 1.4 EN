@@ -1,0 +1,1039 @@
+options:
+	time: 60 #Time to log in
+	hash: 100 #Amount of hash repetitions
+	minpass: 8 #Min password length
+	maxpass: 32 #Max password length
+	tag: &anc&3Auth &7> #Self explanatory
+	tpt: 10 #Teleport delay to place where player stood before if not logged in (ticks)
+
+on chat:
+	if {ncauth::%player's uuid%::chat} is not "none":
+		cancel event
+		if message is "***":
+			if {ncauth::%player's uuid%::login} is true:
+				set {ncauth::%player's uuid%::chat} to "none"
+				send "{@tag} All actions were canceled"
+		else:
+			if {ncauth::%player's uuid%::chat} is "start":
+				if message is "1":
+					set {ncauth::%player's uuid%::chat} to "chgpass"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lSet new password ({@minpass}-{@maxpass} characters)"
+					send ""
+					send ""
+					send ""
+					send "&7Type new password and confirm with ENTER"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+				else if message is "2":
+					set {ncauth::%player's uuid%::chat} to "maspass-iplock"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lEnter MasPass to continue"
+					send ""
+					send ""
+					send "&7Type your MasPass and press ENTER"
+					send "&7Forgot? Type &b&lRESET"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+				else if message is "3":
+					set {ncauth::%player's uuid%::chat} to "success"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6Your MasPass"
+					send "&2&l%{ncauth::%player's uuid%::maspass}%"
+					send ""
+					send ""
+					send "&7Type &b&lMENU &7to go back to main menu"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "chgpass":
+				if length of message is between {@minpass} and {@maxpass}:
+					set {ncauth::%player's uuid%::chat} to "chgconf"
+					set {ncuath::%player's uuid%::temppass} to message
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lConfirm your password"
+					send ""
+					send ""
+					send ""
+					send "&7Confirm new password and press ENTER"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lSet new password ({@minpass}-{@maxpass} characters)"
+					send "&4Error: Too long/short password"
+					send ""
+					send ""
+					send "&7Type new password and press ENTER"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "chgconf":
+				if message = {ncuath::%player's uuid%::temppass}:
+					set {_np} to "%message%%player's uuid%"
+					loop {@hash} times:
+						set {_np} to hashed {_np}
+					set {ncauth::%player's uuid%::pass} to {_np}
+					set {ncauth::%player's uuid%::chat} to "success"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&a&lPassword has been changed"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lMENU &7to go back to main menu"
+					send "&7Type &b&l*** &7to exit"
+					send "&8============================================"
+				else:
+					set {ncauth::%player's uuid%::chat} to "success"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&4&lPassword has not been changed"
+					send "&6Passwords are not matching"
+					send ""
+					send ""
+					send "&7Type &b&lMENU &7to go back to main menu"
+					send "&7Type &b&l*** &7to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "maspass-chgpass":
+				if message = {ncauth::%player's uuid%::maspass}:
+					set {ncauth::%player's uuid%::chat} to "chgpass"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lSet new password ({@minpass}-{@maxpass} characters)"
+					send ""
+					send ""
+					send ""
+					send "&7Type nowe haslo i nacisnij ENTER"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lEnter MasPass to continue"
+					send "&4Error: Incorrect MasPass"
+					send ""
+					send "&7Type your MasPass and press ENTER"
+					send "&7Forgot? Type &b&lRESET"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "success":
+				if message is "MENU" or "menu":
+					set {ncauth::%player's uuid%::chat} to "start"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&l1. Change password"
+					send "&6&l2. Toggle secure login mode"
+					send "&6&l3. View MasPass"
+					send ""
+					send "&7Type 1, 2 or 3 and press ENTER"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "maspass-iplock":
+				if message = {ncauth::%player's uuid%::maspass}:
+					set {ncauth::%player's uuid%::chat} to "iplock"
+					if {ncauth::%player's uuid%::iplock} is false:
+						send "&8============================================"
+						send "    &6&l/// &4&l/!\ ALERT /!\ &6///"
+						send ""
+						send "&6Enabling this function restricts availability"
+						send "&6to log in from all networks but one"
+						send "&6you have been registered from (%{ncauth::%player's uuid%::ip}%)"
+						send "&4&lDo you want to continue?"
+						send "&7Type &b&lYES &7or &b&lNO &7and press ENTER"
+						send "&7To exit type &b&l*** &7at any time"
+						send "&8============================================"
+					else:
+						send "&8============================================"
+						send "    &6&l/// &4&l/!\ ALERT /!\ &6///"
+						send ""
+						send "&6Disabling this function removes restrictions"
+						send "&6applied to other networks than one"
+						send "&6you have been registered from (%{ncauth::%player's uuid%::ip}%)"
+						send "&4&lDo you want to continue?"
+						send "&7Type &b&lYES &7or &b&lNO &7and press ENTER"
+						send "&7To exit type &b&l*** &7at any time"
+						send "&8============================================"
+				else:
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lEnter MasPass to continue"
+					send "&4Error: Incorrect MasPass"
+					send ""
+					send "&7Type your MasPass and press ENTER"
+					send "&7Forgot? Type &b&lRESET"
+					send "&7To exit type &b&l*** &7at any time"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "iplock":
+				if message is "YES" or "yes":
+					if {ncauth::%player's uuid%::iplock} is false:
+						set {ncauth::%player's uuid%::iplock} to true
+						set {ncauth::%player's uuid%::chat} to "success"
+						send "&8============================================"
+						send ""
+						send ""
+						send "&a&lSecure login mode enabled"
+						send ""
+						send ""
+						send ""
+						send "&7Type &b&lMENU &7to go back to main menu"
+						send "&7Type &b&l*** &7to exit"
+						send "&8============================================"
+					else if {ncauth::%player's uuid%::iplock} is true:
+						set {ncauth::%player's uuid%::iplock} to false
+						set {ncauth::%player's uuid%::chat} to "success"
+						send "&8============================================"
+						send ""
+						send ""
+						send "&a&lSecure login mode disabled"
+						send ""
+						send ""
+						send ""
+						send "&7Type &b&lMENU &7to go back to main menu"
+						send "&7Type &b&l*** &7to exit"
+						send "&8============================================"
+				else if message is "NO" or "no":
+					set {ncauth::%player's uuid%::chat} to "success"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&4&lSecure login mode not changed"
+					send "&6Cancelled by user"
+					send ""
+					send ""
+					send "&7Type &b&lMENU &7to go back to main menu"
+					send "&7Type &b&l*** &7to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "reset":
+				if message is "YES" or "yes":
+					send "&8============================================"
+					send "   &6&l/// &4&l/!\ CRITICAL ERROR /!\ &6///"
+					send ""
+					send "&6In order to recover your account you have"
+					send "&6to contact a person with sufficient permissions"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lBACK"
+					send "&8============================================"
+				else if message is "NO", "no", "BACK" or "back":
+					set {ncauth::%player's uuid%::chat} to "success"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&4&lReset account has not been made"
+					send "&6Cancelled by user"
+					send ""
+					send ""
+					send "&7Type &b&lMENU &7to go back to main menu"
+					send "&7Type &b&l*** &7to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "register":
+				set {ncauth::%player's uuid%::chat} to "setpass"
+				send "&8============================================"
+				send ""
+				send ""
+				send "&6&lSet your new password ({@minpass}-{@maxpass} characters)"
+				send ""
+				send "&7&oNo worries, no one will not see your password"
+				send ""
+				send ""
+				send "&7Type new password and press ENTER"
+				send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "setpass":
+				if length of message is between {@minpass} and {@maxpass}:
+					set {ncauth::%player's uuid%::chat} to "setconf"
+					set {ncuath::%player's uuid%::temppass} to message
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lConfirm new password"
+					send ""
+					send ""
+					send ""
+					send ""
+					send "&7Confirm your password and press ENTER"
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lSet your new password ({@minpass}-{@maxpass} characters)"
+					send "&4Error: Too long/short password"
+					send ""
+					send ""
+					send ""
+					send "&7Type new password and press ENTER"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "setconf":
+				if message = {ncuath::%player's uuid%::temppass}:
+					set {_np} to "%message%%player's uuid%"
+					set {_maspass} to "%player's ip%%player's uuid%%message%%now%"
+					loop {@hash} times:
+						set {_np} to hashed {_np}
+						set {_maspass} to hashed {_maspass}
+					set {ncauth::%player's uuid%::pass} to {_np}
+					set {ncauth::%player's uuid%::maspass} to {_maspass}
+					set {ncauth::%player's uuid%::ip} to player's ip
+					set {ncauth::%player's uuid%::reg} to now
+					set {ncauth::%player's uuid%::chat} to "none"
+					set {ncauth::%player's uuid%::login} to true
+					set {ncauth::%player's uuid%::register} to true
+					set {ncauth::%player's uuid%::nick} to player
+					send "&8============================================"
+					send ""
+					send ""
+					send "&a&lHou have been registered!"
+					send "&aHave fun!"
+					send ""
+					send ""
+					send ""
+					send ""
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6&lConfirm new password"
+					send "&4Error: Passwords are not matching"
+					send ""
+					send ""
+					send ""
+					send "&7Confirm your password and press ENTER"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "login" or "login-maspass":
+				if message is "NONE" or "none":
+					set {ncauth::%player's uuid%::chat} to "forgot"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6Do you have MasPass?"
+					send ""
+					send ""
+					send "&7Type in if you have one"
+					send "&7Type &b&lNO &7if you do not have one"
+					send "&7Type &b&lBACK &7if you remembered your password"
+					send "&8============================================"
+				else:
+					set {_pass} to "%message%%player's uuid%"
+					loop {@hash} times:
+						set {_pass} to hashed {_pass}
+					if {_pass} = {ncauth::%player's uuid%::pass}:
+						wait 1 tick
+						set {ncauth::%player's uuid%::login} to true
+						set {ncauth::%player's uuid%::chat} to "none"
+						send "&8============================================"
+						send ""
+						send ""
+						send "&a&lZostales zalogowany/a!"
+						send "&aMilej gry!"
+						send ""
+						send ""
+						send ""
+						send ""
+						send "&8============================================"
+					else:
+						send "&8============================================"
+						send ""
+						send ""
+						send "&6&lEnter your password"
+						send "&4Error: Incorrect password"
+						send ""
+						send ""
+						send "&7Enter and press ENTER"
+						send "&7Type &b&lNONE &7aby odzyskac haslo"
+						send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "forgot":
+				if message is "NO" or "no":
+					send "&8============================================"
+					send "   &6&l/// &4&l/!\ CRITICAL ERROR /!\ &6///"
+					send ""
+					send "&6In order to recover your account you have"
+					send "&6to contact a person with sufficient permissions"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lBACK"
+					send "&8============================================"
+				else if message is "BACK" or "back":
+					if {ncauth::%player's uuid%::iplock} is true:
+						if player's ip is not {ncauth::%player's uuid%::ip}:
+							set {ncauth::%player's uuid%::chat} to "login-maspass"
+							send "&8============================================"
+							send ""
+							send "   &aLOOGING IN SECURED"
+							send ""
+							send "&6&lEnter your MasPass"
+							send ""
+							send ""
+							send "&7Enter and press ENTER"
+							send "&7Type &b&lNONE &7to recover access"
+							send "&8============================================"
+						else:
+							set {ncauth::%player's uuid%::chat} to "login"
+							send "&8============================================"
+							send ""
+							send ""
+							send "&6&lEnter your password"
+							send ""
+							send ""
+							send ""
+							send "&7Enter and press ENTER"
+							send "&7Type &b&lNONE &7to recover password"
+							send "&8============================================"
+					else:
+						set {ncauth::%player's uuid%::chat} to "login"
+						send "&8============================================"
+						send ""
+						send ""
+						send "&6&lEnter your password"
+						send ""
+						send ""
+						send ""
+						send "&7Enter and press ENTER"
+						send "&7Type &b&lNONE &7to recover password"
+						send "&8============================================"
+				else:
+					if message = {ncauth::%player's uuid%::maspass}:
+						set {ncauth::%player's uuid%::chat} to "setpass"
+						send "&8============================================"
+						send ""
+						send ""
+						send "&6&lSet your new password ({@minpass}-{@maxpass} characters)"
+						send ""
+						send ""
+						send ""
+						send ""
+						send "&7Type new password and press ENTER"
+						send "&8============================================"
+					else:	
+						send "&8============================================"
+						send ""
+						send ""
+						send "&6Do you have MasPass?"
+						send "&4Error: MasPass is incorrect"
+						send ""
+						send "&7Type in if you have one"
+						send "&7Type &b&lNO &7if you do not have one"
+						send "&7Type &b&lBACK &7if you remembered your password"
+						send "&8============================================"
+			else if {ncauth::%player's uuid%::chat} is "reset-nl":
+				if message is "YES" or "yes":
+					send "&8============================================"
+					send "   &6&l/// &4&l/!\ CRITICAL ERROR /!\ &6///"
+					send ""
+					send "&6In order to recover your account you have"
+					send "&6to contact a person with sufficient permissions"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lBACK"
+					send "&8============================================"
+				else if message is "NO" or "no":
+					set {ncauth::%player's uuid%::chat} to "forgot"
+					send "&8============================================"
+					send ""
+					send ""
+					send "&6Czy masz MasPass?"
+					send ""
+					send ""
+					send "&7Type jesli go masz"
+					send "&7Type &b&lNO &7jesli go no masz"
+					send "&7Type &b&lBACK &7jesli przypomniales sobie haslo"
+					send "&8============================================"
+			if {ncauth::%player's uuid%::chat} is "maspass-iplock" or "maspass-chgpass":
+				if message is "RESET" or "reset":
+					set {ncauth::%player's uuid%::chat} to "reset"
+					send "&8============================================"
+					send "   &6&l/// &4&l/!\ CRITICAL ERROR /!\ &6///"
+					send ""
+					send "&6In order to recover your account you have"
+					send "&6to contact a person with sufficient permissions"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lBACK"
+					send "&8============================================"
+	else if {ncauth::%player's uuid%::admin::mode} is not "none":
+		cancel event
+		if message is "***":
+			set {ncauth::%player's uuid%::admin::mode} to "none"
+			send "{@tag} &cYou have left from admin panel"
+		else if message is "BACK" or "back":
+			set {ncauth::%player's uuid%::admin::mode} to "start"
+			send "&8============================================"
+			send "      &anc&3Auth &4&lCONTROL PANEL"
+			send ""
+			send "&6&l1. View user data"
+			send "&6&l2. Manage user data"
+			send "&6&l3. Toggle secure login mode"
+			send "&6&l4. &4&lRESET ACCOUNT"
+			send ""
+			send "&7Type &b&l*** &7at any time to exit"
+			send "&8============================================"
+		else:
+			if {ncauth::%player's uuid%::admin::mode} is "start":
+				send "&8============================================"
+				send "      &anc&3Auth &4&lCONTROL PANEL"
+				send ""
+				send "&6&lEnter user's UUID"
+				send ""
+				send "&7Type &b&lSELF &7to manage yourself"
+				send "&7Type &b&lTARG &7to manage targeted player"
+				send "&7Type user's UUID and press ENTER"
+				send "&7Type &b&l*** &7at any time to exit"
+				send "&8============================================"
+				if message is "1":
+					set {ncauth::%player's uuid%::admin::mode} to "viewdata"
+				else if message is "2":
+					set {ncauth::%player's uuid%::admin::mode} to "setdata"
+				else if message is "3":
+					set {ncauth::%player's uuid%::admin::mode} to "iplock"
+				else if message is "4":
+					set {ncauth::%player's uuid%::admin::mode} to "reset"				
+			else if {ncauth::%player's uuid%::admin::mode} is "viewdata":
+				if {ncauth::%message%::register} is true:
+					set {ncauth::%player's uuid%::admin::mode} to "success"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL &3(%{ncauth::%player's uuid%::nick}%)"
+					send "&aRegistered &6%{ncauth::%message%::reg}% z %{ncauth::%message%::ip}%"
+					send "&aPassword: &3%{ncauth::%message%::pass}%"
+					send "&aMasPass &6%{ncauth::%message%::maspass}%"
+					if {ncauth::%message%::iplock} is true:
+						send "&2Secure login mode enabled"
+					else:
+						send "&4Secure login mode disabled"
+					send "&aUUID: &3%message%"
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "CEL" or "cel":
+					set {_target} to target player's uuid
+					set {ncauth::%player's uuid%::admin::mode} to "success"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL &3(%{ncauth::%player's uuid%::nick}%)"
+					send "&aRegistered &6%{ncauth::%message%::reg}% z %{ncauth::%message%::ip}%"
+					send "&aPassword: &3%{ncauth::%message%::pass}%"
+					send "&aMasPass &6%{ncauth::%message%::maspass}%"
+					if {ncauth::%message%::iplock} is true:
+						send "&2Secure login mode enabled"
+					else:
+						send "&4Secure login mode disabled"
+					send "&aUUID: &3%message%"
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "SELF" or "self":
+					set {ncauth::%player's uuid%::admin::mode} to "success"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL &3(%{ncauth::%player's uuid%::nick}%)"
+					send "&aRegistered &6%{ncauth::%message%::reg}% z %{ncauth::%message%::ip}%"
+					send "&aPassword: &3%{ncauth::%message%::pass}%"
+					send "&aMasPass &6%{ncauth::%message%::maspass}%"
+					if {ncauth::%message%::iplock} is true:
+						send "&2Secure login mode enabled"
+					else:
+						send "&4Secure login mode disabled"
+					send "&aUUID: &3%message%"
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lEnter user's UUID"
+					send "&4Error: User is not registered"
+					send "&7Type &b&lSELF &7to manage yourself"
+					send "&7Type &b&lTARG &7to manage targeted player"
+					send "&7Type user's UUID and press ENTER"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "setdata":
+				if {ncauth::%message%::register} is true:
+					set {ncauth::%player's uuid%::admin::target} to message
+					set {ncauth::%player's uuid%::admin::mode} to "edit"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL &3(%{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%)"
+					send ""
+					send "&6&l1. Change date of registration"
+					send "&6&l2. Change IP"
+					send "&6&l3. Change password"
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "CEL" or "cel":
+					set {ncauth::%player's uuid%::admin::target} to target player's uuid
+					set {ncauth::%player's uuid%::admin::mode} to "edit"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL &3(%{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%)"
+					send ""
+					send "&6&l1. Change date of registration"
+					send "&6&l2. Change IP"
+					send "&6&l3. Change password"
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "SELF" or "self":
+					set {ncauth::%player's uuid%::admin::target} to player's uuid
+					set {ncauth::%player's uuid%::admin::mode} to "edit"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL &3(You)"
+					send ""
+					send "&6&l1. Change date of registration"
+					send "&6&l2. Change IP"
+					send "&6&l3. Change password"
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lEnter user's UUID"
+					send "&4Error: User is not registered"
+					send "&7Type &b&lSELF &7to manage yourself"
+					send "&7Type &b&lTARG &7to manage targeted player"
+					send "&7Type user's UUID and press ENTER"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "edit":
+				if message is "1":
+					set {ncauth::%player's uuid%::admin::mode} to "edit-reg"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&2&aAktualna data rejestracji:"
+					send "&3&l%{ncauth::%{ncauth::%player's uuid%::admin::target}%::reg}%"
+					send ""
+					send "&7Type &b&lNOW &7aby ustawic date na teraz"
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "2":
+					set {ncauth::%player's uuid%::admin::mode} to "edit-ip"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lWpisz nowe IP"
+					send ""
+					send ""
+					send "&7Type &b&lNOW &7aby ustawic na aktualne"
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "3":
+					set {ncauth::%player's uuid%::admin::mode} to "edit-pass"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lWpisz nowe haslo ({@minpass}-{@maxpass} znakow)"
+					send "&cPodaj je uzytkownikowi zanim zmienisz"
+					send ""
+					send ""
+					send ""
+					send "&7Type nowe haslo i nacisnij ENTER"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "edit-reg":
+				if message is "NOW" or "now":
+					set {ncauth::%{ncauth::%player's uuid%::admin::target}%::reg} to now
+					set {ncauth::%player's uuid%::admin::mode} to "success"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&2&aAktualna data rejestracji:"
+					send "&3&l%{ncauth::%{ncauth::%player's uuid%::admin::target}%::reg}%"
+					send "&aData zmieniona"
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "edit-pass":
+				if length of message is between {@minpass} and {@maxpass}:
+					set {_np} to "%message%%player's uuid%"
+					loop {@hash} times:
+						set {_np} to hashed {_np}
+					set {ncauth::%{ncauth::%player's uuid%::admin::target}%::pass} to {_np}
+					set {ncauth::%player's uuid%::admin::mode} to "success"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lHaslo ustawione"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "edit-ip":
+				set {ncauth::%{ncauth::%player's uuid%::admin::target}%::ip} to message
+				set {ncauth::%player's uuid%::admin::mode} to "success"
+				send "&8============================================"
+				send "      &anc&3Auth &4&lCONTROL PANEL"
+				send ""
+				send "&a&lIP zmienione na &3&l%{ncauth::%{ncauth::%player's uuid%::admin::target}%::ip}%"
+				send ""
+				send ""
+				send ""
+				send "&7Type &b&lBACK &7to go to main menu"
+				send "&7Type &b&l*** &7at any time to exit"
+				send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "iplock":
+				if {ncauth::%message%::register} is true:
+					set {ncauth::%player's uuid%::admin::target} to message
+					set {ncauth::%player's uuid%::admin::mode} to "iplock-conf"
+					if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is false:
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send "    &6&l/// &4&l/!\ ALERT /!\ &6///"
+						send ""
+						send "&4Czy na pewno chcesz wlaczyc %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%"
+						send "&4tryb bezpiecznego logowania?"
+						send "&7Type &b&lYES &7lub &b&lNO"
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+					else if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is true:
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+						send ""
+						send "&4Czy na pewno chcesz wylaczyc %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%"
+						send "&4tryb bezpiecznego logowania?"
+						send "&7Type &b&lYES &7lub &b&lNO"
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+				else if message is "CEL" or "cel":
+					set {ncauth::%player's uuid%::admin::target} to target player's uuid
+					set {ncauth::%player's uuid%::admin::mode} to "iplock-conf"
+					if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is false:
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+						send ""
+						send "&4Do you want to enable %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%'s"
+						send "&4secure login mode?"
+						send "&7Type &b&lYES &7lub &b&lNO"
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+					else if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is true:
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+						send ""
+						send "&4Do you want to disable %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%'s"
+						send "&4secure login mode?"
+						send "&7Type &b&lYES &7lub &b&lNO"
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+				else if message is "SELF" or "self":
+					set {ncauth::%player's uuid%::admin::target} to player's uuid
+					set {ncauth::%player's uuid%::admin::mode} to "iplock-conf"
+					if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is false:
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+						send ""
+						send "&4Do you want to enable %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%'s"
+						send "&4secure login mode?"
+						send "&7Type &b&lYES &7lub &b&lNO"
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+					else if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is true:
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send "    &6&l/// &4&l/!\ UWAGA /!\ &6///"
+						send ""
+						send "&4Do you want to disable %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%'s"
+						send "&4secure login mode?"
+						send "&7Type &b&lYES &7lub &b&lNO"
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+				else:
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lEnter user's UUID"
+					send "&4Error: User is not registered"
+					send "&7Type &b&lSELF &7to manage yourself"
+					send "&7Type &b&lTARG &7to manage targeted player"
+					send "&7Type user's UUID and press ENTER"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "iplock-conf":
+				set {ncauth::%player's uuid%::admin::mode} to "success"
+				if message is "YES" or "yes":
+					if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is false:
+						set {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} to true
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send ""
+						send "&a&lSecure login mode for %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%"
+						send "&a&lhas been enabled"
+						send ""
+						send ""
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+					else if {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} is true:
+						set {ncauth::%{ncauth::%player's uuid%::admin::target}%::iplock} to false
+						send "&8============================================"
+						send "      &anc&3Auth &4&lCONTROL PANEL"
+						send ""
+						send "&a&lSecure login mode for %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%"
+						send "&a&lhas been disabled"
+						send ""
+						send ""
+						send "&7Type &b&lBACK &7to go to main menu"
+						send "&7Type &b&l*** &7at any time to exit"
+						send "&8============================================"
+				else if message is "NO" or "no":
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&4&lSecure login mode for %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%"
+					send "&4&lhas not been changed"
+					send "&6Cancelled by administrator"
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "reset":
+				if {ncauth::%message%::register} is true:
+					set {ncauth::%player's uuid%::admin::target} to message
+					set {ncauth::%player's uuid%::admin::mode} to "reset-conf"
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send "    &6&l/// &4&l/!\ ALERT /!\ &6///"
+					send ""
+					send "&4Do you want to reset account of %{ncauth::%{ncauth::%player's uuid%::admin::target}%::nick}%?"
+					send "&4&lTHE PROCESS IS IRREVERSIBLE!"
+					send "&7Type &b&lYES &7or &b&lNO"
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else:
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&6&lEnter user's UUID"
+					send "&4Blad: Incorrect format"
+					send "&cI forgot to mention &b&lSELF &cand &b&lTARG &coptions"
+					send "&care unavailable for this action :)"
+					send "&7Type user's UUID and press ENTER"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+			else if {ncauth::%player's uuid%::admin::mode} is "reset-conf":
+				set {ncauth::%player's uuid%::admin::mode} to "success"
+				if message is "YES" or "yes":
+					set {_p} to {ncauth::%{ncauth::%player's uuid%::admin::target}%::nick} parsed as player
+					kick {_p} due to "{@tag} &cYour acount has been reset, kappa"
+					delete {ncauth::%{ncauth::%player's uuid%::admin::target}%::*}
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&a&lUser's account has been reset"
+					send ""
+					send ""
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+				else if message is "NO" or "no":
+					send "&8============================================"
+					send "      &anc&3Auth &4&lCONTROL PANEL"
+					send ""
+					send "&4&lUser's account has not been reset"
+					send "&6Cancelled by administrator"
+					send ""
+					send ""
+					send "&7Type &b&lBACK &7to go to main menu"
+					send "&7Type &b&l*** &7at any time to exit"
+					send "&8============================================"
+	else:
+		set {_pass} to "%message%%player's uuid%"
+		loop {@hash} times:
+			set {_pass} to hashed {_pass}
+		if {_pass} = {ncauth::%player's uuid%::pass}:
+			cancel event
+			send "{@tag} &cNever tell your password to third party!"
+
+on any movement:
+	if {ncauth::%player's uuid%::place} is set:
+		if {ncauth::%player's uuid%::login} is false:
+			wait {@tpt} ticks
+			teleport player to {ncauth::%player's uuid%::place}
+
+on click:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on damage:
+	if {ncauth::%victim's uuid%::login} is false:
+		cancel event
+
+on drop:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on pickup:
+	if {ncauth::%player's uuid%::login} is false:
+		cancel event
+
+on disconnect:	
+	set {ncauth::%player's uuid%::login} to false
+	set {ncauth::%player's uuid%::admin::mode} to "none"
+	delete {ncauth::%player's uuid%::place}
+
+on join:
+	set {ncauth::%player's uuid%::place} to player's location
+	set {ncauth::%player's uuid%::time} to {@time}
+	if {ncauth::%player's uuid%::register} is not set:
+		set {ncauth::%player's uuid%::register} to false
+	if {ncauth::%player's uuid%::login} is not set:
+		set {ncauth::%player's uuid%::login} to false
+	if {ncauth::%player's uuid%::chat} is not set:
+		set {ncauth::%player's uuid%::chat} to "register"
+		wait 1 second
+		send "&8============================================"
+		send ""
+		send "&6Greetings, newcomer!"
+		send "&6Were you starting to type &a/register&6?"
+		send "&6Well, not now."
+		send "&6Why? 'Cause authentication here works like"
+		send "&6on websites (without entering username of course)"
+		send ""
+		send "&7Type anything and press ENTER"
+		send "&8============================================"
+	else if {ncauth::%player's uuid%::login} is false:
+		if {ncauth::%player's uuid%::iplock} is true:
+			if player's ip is not {ncauth::%player's uuid%::ip}:
+				set {ncauth::%player's uuid%::chat} to "login-maspass"
+				wait 1 second
+				send "&8============================================"
+				send ""
+				send "   &aLOOGING IN SECURED"
+				send ""
+				send "&6&lEnter your MasPass"
+				send ""
+				send ""
+				send "&7Enter and press ENTER"
+				send "&7Type &b&lNONE &7to recover access"
+				send "&8============================================"
+			else:
+				set {ncauth::%player's uuid%::chat} to "login"
+				wait 1 second
+				send "&8============================================"
+				send ""
+				send ""
+				send "&6&lEnter your password"
+				send ""
+				send ""
+				send ""
+				send "&7Enter and press ENTER"
+				send "&7Type &b&lNONE &7to recover access"
+				send "&8============================================"
+
+		else:
+			set {ncauth::%player's uuid%::chat} to "login"
+			wait 1 second
+			send "&8============================================"
+			send ""
+			send ""
+			send "&6&lEnter your password"
+			send ""
+			send ""
+			send ""
+			send "&7Enter and press ENTER"
+			send "&7Type &b&lNONE &7to recover access"
+			send "&8============================================"
+	else:
+		send "&8============================================"
+		send ""
+		send ""
+		send "&a&lYour session has been recovered!"
+		send "&aHave fun!"
+		send ""
+		send ""
+		send ""
+		send ""
+		send "&8============================================"
+
+every second:
+	loop all players:
+		if {ncauth::%loop-player's uuid%::login} is false:
+			if {ncauth::%loop-player's uuid%::chat} is "login" or "login-maspass":
+				if {ncauth::%loop-player's uuid%::time} >= 1:
+					add -1 to {ncauth::%loop-player's uuid%::time}
+				else:
+					kick loop-player due to "{@tag} &aType faster next time, kappa"
+
+command /hash <integer> <text>:
+	trigger:
+		set {_h} to arg 2
+		set {_l} to arg 1
+		set {_n} to 1
+		set {_nt} to 1
+		loop {_l} times:
+			set {_h} to hashed {_h}
+			send "&7%{_n}%: &6%{_h}%"
+			add 1 to {_n}
+			add 1 to {_nt}
+			if {_nt} = 10:
+				set {_nt} to 1
+				wait 1 tick
+			
+
+command /ncauth:
+	aliases: chgpass, changepass
+	trigger:
+		set {ncauth::%player's uuid%::chat} to "start"
+		send "&8============================================"
+		send ""
+		send ""
+		send "&6&l1. Change password"
+		send "&6&l2. Toggle secure login mode"
+		send "&6&l3. View MasPass"
+		send ""
+		send "&7Type 1, 2 or 3 and press ENTER"
+		send "&7To exit type &b&l*** &7at any time"
+		send "&8============================================"
+
+command /authadmin:
+	trigger:
+		if player has permission "ncauth.admin":
+			set {ncauth::%player's uuid%::admin::mode} to "start"
+			send "&8============================================"
+			send "      &anc&3Auth &4&lCONTROL PANEL"
+			send ""
+			send "&6&l1. View user data"
+			send "&6&l2. Manage user data"
+			send "&6&l3. Toggle secure login mode"
+			send "&6&l4. &4&lRESET ACCOUNT"
+			send ""
+			send "&7Type &b&l*** &7at any time to exit"
+			send "&8============================================"
+		else:
+			send "{@tag} &4/!\ &6You have no permission to access this command"
